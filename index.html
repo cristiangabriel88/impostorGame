@@ -212,26 +212,8 @@
 			margin: 4px 0 0;
 		}
 
-		.big .first {
-			font-size: 1.35em;
-			line-height: 0.9;
-			font-weight: 950;
-		}
-
-		.big .rest {
-			font-size: 1em;
-		}
-
 		.word {
 			background: linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .62));
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
-			text-shadow: 0 18px 60px rgba(0, 0, 0, .35);
-		}
-
-		.impostor {
-			background: linear-gradient(135deg, var(--danger), #FFD166);
 			-webkit-background-clip: text;
 			background-clip: text;
 			color: transparent;
@@ -279,215 +261,414 @@
 			box-shadow: none;
 			min-width: 160px;
 		}
-
-		.metaLine {
-			margin-top: 10px;
-			font-size: 14px;
-			color: rgba(255, 255, 255, .75);
-			line-height: 1.45;
-		}
-
-		.metaLine b {
-			color: rgba(255, 255, 255, .92);
-		}
 	</style>
 </head>
 
 <body>
-	<div id="app" class="screen">
-		<div class="wrap">
-			<div class="card">
-				<div class="brand">
-					<div class="logo"></div>
-					<div class="title">Impostor</div>
-				</div>
-				<p class="subtitle">Alege numărul de jucători, apoi trece telefonul pe rând. Un singur jucător va vedea
-					<b>IMPOSTOR</b>.
-				</p>
-
-				<div class="row">
-					<div class="field">
-						<label for="players">Jucători</label>
-						<input id="players" type="number" min="3" max="20" value="5" />
-					</div>
-					<button id="start" class="btn">Începe runda</button>
-				</div>
-
-				<div class="hint">După ce începi, telefonul se dă jucătorului 1. Ecranul negru ascunde cuvântul între
-					jucători.</div>
-			</div>
-		</div>
-	</div>
+	<div id="app" class="screen"></div>
 
 	<script>
-		const WORDS = [
-			// obiecte
-			"masa", "scaun", "dulap", "oglinda", "cheie", "telefon", "laptop", "televizor", "lanterna", "ceas",
-			"pix", "carte", "stilou", "rucsac", "umbrela", "perna", "patura", "frigider", "aragaz", "cuptor",
-			"farfurie", "pahar", "lingura", "furculita", "cutit", "tigaie", "oala", "ibric", "cana", "sticla",
 
-			// natura
-			"padure", "munte", "rau", "mare", "lac", "insula", "plaja", "desert", "campie", "deal",
-			"floare", "copac", "frunza", "radacina", "iarba", "nisip", "piatra", "stanca", "nor", "ploaie",
-			"furtuna", "zapada", "soare", "luna", "stea", "cer", "curcubeu", "vulcan", "gheata", "val",
+		const WORDS_RO = [
+				// obiecte
+				"masa", "scaun", "dulap", "oglinda", "cheie", "telefon", "laptop", "televizor", "lanterna", "ceas",
+				"pix", "carte", "stilou", "rucsac", "umbrela", "perna", "patura", "frigider", "aragaz", "cuptor",
+				"farfurie", "pahar", "lingura", "furculita", "cutit", "tigaie", "oala", "ibric", "cana", "sticla",
 
-			// animale
-			"caine", "pisica", "cal", "vaca", "oaie", "capra", "porc", "iepure", "urs", "lup",
-			"vulpe", "leu", "tigru", "elefant", "girafa", "zebra", "sarpe", "broasca", "peste", "delfin",
-			"balena", "rechin", "vultur", "bufnita", "porumbel", "randunica", "pinguin", "fluture", "albine", "paianjen",
+				// natura
+				"padure", "munte", "rau", "mare", "lac", "insula", "plaja", "desert", "campie", "deal",
+				"floare", "copac", "frunza", "radacina", "iarba", "nisip", "piatra", "stanca", "nor", "ploaie",
+				"furtuna", "zapada", "soare", "luna", "stea", "cer", "curcubeu", "vulcan", "gheata", "val",
 
-			// mancare
-			"paine", "branza", "lapte", "ou", "unt", "miere", "zahar", "sare", "piper", "orez",
-			"paste", "cartof", "morcov", "ceapa", "usturoi", "rosie", "castravete", "ardei", "varza", "salata",
-			"mar", "para", "banana", "portocala", "lamaie", "capsuna", "pepene", "strugure", "pruna", "cireasa",
+				// animale
+				"caine", "pisica", "cal", "vaca", "oaie", "capra", "porc", "iepure", "urs", "lup",
+				"vulpe", "leu", "tigru", "elefant", "girafa", "zebra", "sarpe", "broasca", "peste", "delfin",
+				"balena", "rechin", "vultur", "bufnita", "porumbel", "randunica", "pinguin", "fluture", "albine", "paianjen",
 
-			// oameni & actiuni
-			"prieten", "familie", "copil", "parinte", "profesor", "medic", "dentist", "inginer", "sofer", "artist",
-			"cantaret", "actor", "scriitor", "pictor", "fotograf", "sportiv", "dansator", "bucatar", "jucator", "lider",
+				// mancare
+				"paine", "branza", "lapte", "ou", "unt", "miere", "zahar", "sare", "piper", "orez",
+				"paste", "cartof", "morcov", "ceapa", "usturoi", "rosie", "castravete", "ardei", "varza", "salata",
+				"mar", "para", "banana", "portocala", "lamaie", "capsuna", "pepene", "strugure", "pruna", "cireasa",
 
-			// locuri
-			"oras", "sat", "casa", "bloc", "apartament", "birou", "scoala", "liceu", "universitate", "biblioteca",
-			"spital", "farmacie", "magazin", "piata", "restaurant", "cafenea", "parc", "stadion", "gara", "aeroport",
+				// oameni & actiuni
+				"prieten", "familie", "copil", "parinte", "profesor", "medic", "dentist", "inginer", "sofer", "artist",
+				"cantaret", "actor", "scriitor", "pictor", "fotograf", "sportiv", "dansator", "bucatar", "jucator", "lider",
 
-			// transport
-			"masina", "autobuz", "tramvai", "metrou", "tren", "avion", "elicopter", "bicicleta", "motocicleta", "vapor",
-			"barca", "submarin", "racheta", "taxi", "trotineta",
+				// locuri
+				"oras", "sat", "casa", "bloc", "apartament", "birou", "scoala", "liceu", "universitate", "biblioteca",
+				"spital", "farmacie", "magazin", "piata", "restaurant", "cafenea", "parc", "stadion", "gara", "aeroport",
 
-			// abstract / diverse
-			"timp", "liniste", "zgomot", "viteza", "caldura", "frig", "lumina", "umbra", "energie", "putere",
-			"curaj", "frica", "bucurie", "tristete", "speranta", "rabdare", "noroc", "pace", "haos", "ordine",
+				// transport
+				"masina", "autobuz", "tramvai", "metrou", "tren", "avion", "elicopter", "bicicleta", "motocicleta", "vapor",
+				"barca", "submarin", "racheta", "taxi", "trotineta",
 
-			// romanian specific
-			"mamaliga", "sarmale", "cozonac", "ciorba", "zacusca", "mititei", "bulz", "tocanita", "friptura", "papanasi",
-			"palinca", "tuica", "visinata", "afinata", "branza", "telemea", "cascaval", "smantana", "iaurt", "jumari",
+				// abstract / diverse
+				"timp", "liniste", "zgomot", "viteza", "caldura", "frig", "lumina", "umbra", "energie", "putere",
+				"curaj", "frica", "bucurie", "tristete", "speranta", "rabdare", "noroc", "pace", "haos", "ordine",
 
-			"ie", "catrinta", "opinca", "brau", "marama", "caciula", "cojoc", "sumar", "chimire", "itari",
+				// romanian specific
+				"mamaliga", "sarmale", "cozonac", "ciorba", "zacusca", "mititei", "bulz", "tocanita", "friptura", "papanasi",
+				"palinca", "tuica", "visinata", "afinata", "branza", "telemea", "cascaval", "smantana", "iaurt", "jumari",
 
-			"doina", "hora", "sarba", "calus", "lautari", "fluier", "cobza", "taragot", "vioara", "toba",
+				"ie", "catrinta", "opinca", "brau", "marama", "caciula", "cojoc", "sumar", "chimire", "itari",
 
-			"colinda", "plugusor", "sorcova", "martisor", "capra", "ursul", "calusari", "colac", "bucium", "clopot",
+				"doina", "hora", "sarba", "calus", "lautari", "fluier", "cobza", "taragot", "vioara", "toba",
 
-			"stana", "cioban", "mioara", "turma", "transhumanta", "baci", "fluier", "bat", "caciula", "cojoc",
+				"colinda", "plugusor", "sorcova", "martisor", "capra", "ursul", "calusari", "colac", "bucium", "clopot",
 
-			"prispa", "casa", "sura", "fanar", "cotet", "fantana", "poarta", "gard", "ulita", "prispă",
+				"stana", "cioban", "mioara", "turma", "transhumanta", "baci", "fluier", "bat", "caciula", "cojoc",
 
-			"deal", "codru", "poiana", "padis", "crang", "lunca", "ses", "pajiste", "muntisor", "izvor",
+				"prispa", "casa", "sura", "fanar", "cotet", "fantana", "poarta", "gard", "ulita", "prispă",
 
-			"sobă", "plita", "ceaun", "vatră", "lingurar", "donita", "putina", "polonic", "blid", "strachina",
+				"deal", "codru", "poiana", "padis", "crang", "lunca", "ses", "pajiste", "muntisor", "izvor",
 
-			"targ", "balci", "iarmaroc", "piete", "han", "carciuma", "crasma", " birt", "taverna", "popas",
+				"sobă", "plita", "ceaun", "vatră", "lingurar", "donita", "putina", "polonic", "blid", "strachina",
 
-			"vorba", "grai", "accent", "zicala", "proverb", "poveste", "basm", "legenda", "snoava", "ghicitoare",
+				"targ", "balci", "iarmaroc", "piete", "han", "carciuma", "crasma", " birt", "taverna", "popas",
 
-			"mos", "baba", "nepot", "fiu", "fica", "unchi", "matusa", "verisor", "cumnat", "socru",
+				"vorba", "grai", "accent", "zicala", "proverb", "poveste", "basm", "legenda", "snoava", "ghicitoare",
 
-			"noroc", "ghinion", "soarta", "haz", "spirit", "fire", "rabdare", "dor", "jale", "bucurie",
+				"mos", "baba", "nepot", "fiu", "fica", "unchi", "matusa", "verisor", "cumnat", "socru",
 
-			"drum", "poteca", "rascruce", "hotar", "mosie", "ogor", "tarina", "holda", "aratura", "semanat",
+				"noroc", "ghinion", "soarta", "haz", "spirit", "fire", "rabdare", "dor", "jale", "bucurie",
 
-			"paznic", "jandarm", "primar", "invatator", "preot", "dascal", "calugar", "staret", "egumen", "paroh",
+				"drum", "poteca", "rascruce", "hotar", "mosie", "ogor", "tarina", "holda", "aratura", "semanat",
 
-			"biserica", "manastire", "schit", "troita", "icoana", "altar", "clopotnita", "catapeteasma", "lumanare", "tamai",
+				"paznic", "jandarm", "primar", "invatator", "preot", "dascal", "calugar", "staret", "egumen", "paroh",
 
-			"cetate", "curte", "boier", "voievod", "domnitor", "haiduc", "pandur", "steag", "sabie", "spada",
+				"biserica", "manastire", "schit", "troita", "icoana", "altar", "clopotnita", "catapeteasma", "lumanare", "tamai",
 
-			// funny / playful
-			"moft", "bufon", "nazdravan", "ghidus", "zbanghiu", "aiurit", "zapacit", "traznit", "bleg",
-			"gogoman", "tampit", "zurlu", "cascaval", "burtos", "pufos", "mototol", "ciufulit", "boscorodit", "harababura",
+				"cetate", "curte", "boier", "voievod", "domnitor", "haiduc", "pandur", "steag", "sabie", "spada",
 
-			"bambus", "gogoasa", "clatita", "gogosi", "placinta", "chifla", "covrig", "foietaj", "pufarina", "pateu",
+				// funny / playful
+				"moft", "bufon", "nazdravan", "ghidus", "zbanghiu", "aiurit", "zapacit", "traznit", "bleg",
+				"gogoman", "tampit", "zurlu", "cascaval", "burtos", "pufos", "mototol", "ciufulit", "boscorodit", "harababura",
 
-			"ciorapel", "papuc", "slapi", "pijama", "halat", "chiloti", "soseta", "basca", "sapca", "palariuta",
+				"bambus", "gogoasa", "clatita", "gogosi", "placinta", "chifla", "covrig", "foietaj", "pufarina", "pateu",
 
-			"gargara", "balbaiala", "bolboroseala", "mormaiala", "fasait", "pocnitura", "bubuitura", "zdranganeala", "harait", "zgomotel",
+				"ciorapel", "papuc", "slapi", "pijama", "halat", "chiloti", "soseta", "basca", "sapca", "palariuta",
 
-			"pisalog", "barfitor", "morocanos", "bombanitor", "sucit", "pizma", "fitzos", "figuri", "mofturos", "tacanit",
+				"gargara", "balbaiala", "bolboroseala", "mormaiala", "fasait", "pocnitura", "bubuitura", "zdranganeala", "harait", "zgomotel",
 
-			"burtica", "nasuc", "ochisor", "manuta", "piciorus", "fundulet", "urechiusa", "botic", "mustacioara", "barbita",
+				"pisalog", "barfitor", "morocanos", "bombanitor", "sucit", "pizma", "fitzos", "figuri", "mofturos", "tacanit",
 
-			"ciuf", "mot", "cocos", "pui", "gaina", "gasca", "ratoi", "curcan", "porumbel", "cioara",
+				"burtica", "nasuc", "ochisor", "manuta", "piciorus", "fundulet", "urechiusa", "botic", "mustacioara", "barbita",
 
-			"claxon", "trompeta", "sirena", "fluier", "toba", "poc", "bang", "zbang", "buf", "trosc",
+				"ciuf", "mot", "cocos", "pui", "gaina", "gasca", "ratoi", "curcan", "porumbel", "cioara",
 
-			"teleleu", "aiurea", "anapoda", "varza", "talmes-balmes", "harcea-parcea", "bulibaseala", "zapaceala", "incurcatura", "balamuc",
+				"claxon", "trompeta", "sirena", "fluier", "toba", "poc", "bang", "zbang", "buf", "trosc",
 
-			"joaca", "ghidusie", "pacaleala", "smecherie", "prostioara", "nazbatie", "pozna", "gluma", "farsa", "picanterie",
+				"teleleu", "aiurea", "anapoda", "varza", "talmes-balmes", "harcea-parcea", "bulibaseala", "zapaceala", "incurcatura", "balamuc",
 
-			// random interesting romanian
-			"amnar", "briceag", "caldarus", "cazane", "talaz", "hamac", "felinar", "zbor", "ecou", "oglindire",
-			"pumn", "cot", "genunchi", "umeri", "ceafa", "incheietura", "talpa", "degetar", "unghiera", "perna",
+				"joaca", "ghidusie", "pacaleala", "smecherie", "prostioara", "nazbatie", "pozna", "gluma", "farsa", "picanterie",
 
-			"alunecare", "scanteie", "clipa", "puls", "freamat", "tresarire", "vibratie", "ecart", "spirala", "unda",
+				// random interesting romanian
+				"amnar", "briceag", "caldarus", "cazane", "talaz", "hamac", "felinar", "zbor", "ecou", "oglindire",
+				"pumn", "cot", "genunchi", "umeri", "ceafa", "incheietura", "talpa", "degetar", "unghiera", "perna",
 
-			"colind", "taina", "tainic", "vestitor", "pribeag", "ratacitor", "calator", "popas", "chemare", "hotar",
+				"alunecare", "scanteie", "clipa", "puls", "freamat", "tresarire", "vibratie", "ecart", "spirala", "unda",
 
-			"busuioc", "pelin", "lavanda", "mac", "sunatoare", "cimbru", "isop", "menta", "rozmarin", "salvie",
+				"colind", "taina", "tainic", "vestitor", "pribeag", "ratacitor", "calator", "popas", "chemare", "hotar",
 
-			"amurg", "zor", "miez", "umbra", "lucire", "sclipire", "tremur", "fosnet", "soapta", "susur",
+				"busuioc", "pelin", "lavanda", "mac", "sunatoare", "cimbru", "isop", "menta", "rozmarin", "salvie",
 
-			"atelier", "manuscris", "coperta", "sigla", "emblema", "insigna", "medalie", "trofeu", "placheta", "diploma",
+				"amurg", "zor", "miez", "umbra", "lucire", "sclipire", "tremur", "fosnet", "soapta", "susur",
 
-			"pluta", "carma", "ancora", "cang", "panza", "catarg", "corabie", "galera", "vasla", "sfoara",
+				"atelier", "manuscris", "coperta", "sigla", "emblema", "insigna", "medalie", "trofeu", "placheta", "diploma",
 
-			"abur", "fum", "cenusa", "jar", "vapaie", "scoria", "magma", "lava", "crater", "tuf",
+				"pluta", "carma", "ancora", "cang", "panza", "catarg", "corabie", "galera", "vasla", "sfoara",
 
-			"cristal", "reflex", "spectru", "prisma", "lentila", "filtru", "diafragma", "focus", "claritate", "distorsiune",
+				"abur", "fum", "cenusa", "jar", "vapaie", "scoria", "magma", "lava", "crater", "tuf",
 
-			"radar", "sonar", "semnal", "impuls", "frecventa", "interferenta", "latenta", "releu", "conductor", "izolator",
+				"cristal", "reflex", "spectru", "prisma", "lentila", "filtru", "diafragma", "focus", "claritate", "distorsiune",
 
-			"zodie", "horoscop", "astrolab", "talisman", "amuleta", "vraja", "descantec", "ritual", "simbol", "semn",
+				"radar", "sonar", "semnal", "impuls", "frecventa", "interferenta", "latenta", "releu", "conductor", "izolator",
 
-			"busola", "meridian", "paralela", "azimut", "altitudine", "latitudine", "orizont", "zenit", "nadir", "echinocțiu",
+				"zodie", "horoscop", "astrolab", "talisman", "amuleta", "vraja", "descantec", "ritual", "simbol", "semn",
 
-			"tipar", "gravura", "relief", "textura", "patina", "nuanta", "pigment", "contrast", "ton", "umbrare",
+				"busola", "meridian", "paralela", "azimut", "altitudine", "latitudine", "orizont", "zenit", "nadir", "echinocțiu",
 
-			"pavilion", "arcada", "colonada", "fronton", "cupola", "balustrada", "scară", "pasarelă", "belvedere", "loggie",
+				"tipar", "gravura", "relief", "textura", "patina", "nuanta", "pigment", "contrast", "ton", "umbrare",
 
-			"fragil", "elastic", "dens", "poros", "mat", "lucios", "opac", "transparent", "fluid", "solid",
+				"pavilion", "arcada", "colonada", "fronton", "cupola", "balustrada", "scară", "pasarelă", "belvedere", "loggie",
 
-			"miraj", "iluzie", "paradox", "ecou", "abis", "vertij", "enigma", "mister", "labirint", "portal",
+				"fragil", "elastic", "dens", "poros", "mat", "lucios", "opac", "transparent", "fluid", "solid",
+
+				"miraj", "iluzie", "paradox", "ecou", "abis", "vertij", "enigma", "mister", "labirint", "portal",
 
 
-			"far", "busola", "catarg", "binoclu", "harta", "pergament", "sigiliu", "amfora", "clepsidra", "candelabru",
-			"bumerang", "harpon", "catuse", "armura", "coif", "spada", "pumnal", "scut", "arc", "sageata",
-			"carusel", "labirint", "sirena", "pirat", "viking", "samurai", "gladiator", "magician", "alchimist", "astronaut",
-			"templu", "cetate", "castel", "palat", "catacomba", "ruina", "turn", "pod", "tunel", "caverna",
-			"observator", "far", "planetariu", "biblioteca", "muzeu", "teatru", "cinema", "atelier", "laborator", "seră",
-			"vulcan", "gheizer", "canion", "delta", "fiord", "jungla", "savana", "taiga", "arhipelag", "recif",
-			"tornada", "furtuna", "uragan", "viscol", "ceata", "aurora", "eclipsa", "meteor", "cometa", "constelatie",
-			"corb", "bufnita", "vultur", "soim", "liliac", "dihor", "vidra", "caprioara", "mistret", "arici",
-			"delfin", "caracatita", "meduza", "calamar", "rechin", "balena", "hipocamp", "piranha", "manta",
-			"tramvai", "metrou", "telecabina", "teleferic", "dirijabil", "hidroavion", "submarin", "drezina", "trotineta", "motocicleta",
-			"paleta", "sah", "poker", "zar", "darts", "biliard", "pingpong", "skateboard", "parasuta", "scafandru",
-			"espressor", "mojar", "tel", "razatoare", "tava", "strecuratoare", "polonic", "tocator", "borcan", "termos",
-			"cafea", "cacao", "scortisoara", "vanilie", "ghimbir", "cuisoare", "chimen", "coriandru", "busuioc", "rozmarin",
-			"tiramisu", "clatita", "gogosi", "cozonac", "sarmale", "ciorba", "mamaliga", "tocanita", "friptura", "salata",
-			"tamplar", "fierar", "ceasornicar", "bijutier", "arhitect", "pilot", "navigator", "detectiv", "paramedic", "pompier",
-			"fotograf", "regizor", "sculptor", "pictor", "actor", "dansator", "dirijor", "violonist", "chitarist", "tobar",
-			"parola", "criptare", "server", "router", "firewall", "aplicatie", "browser", "cursor", "tastatura", "monitor",
-			"oglinda", "lanterna", "lupa", "magnet", "baterie", "siguranta", "comutator", "intrupator", "priza", "cablu",
-			"caligrafie", "origami", "mandala", "graffiti", "colaj", "acuarela", "panza", "sevalet", "pensula", "ceramica",
-			"tramvai", "felinar", "bulevard", "piateta", "pasaj", "esplanada", "promenada", "faleza", "chei", "port",
-			"legenda", "mit", "enigma", "blestem", "comoara", "hartie", "jurnal", "scrisoare", "mesaj", "cod"
+				"far", "busola", "catarg", "binoclu", "harta", "pergament", "sigiliu", "amfora", "clepsidra", "candelabru",
+				"bumerang", "harpon", "catuse", "armura", "coif", "spada", "pumnal", "scut", "arc", "sageata",
+				"carusel", "labirint", "sirena", "pirat", "viking", "samurai", "gladiator", "magician", "alchimist", "astronaut",
+				"templu", "cetate", "castel", "palat", "catacomba", "ruina", "turn", "pod", "tunel", "caverna",
+				"observator", "far", "planetariu", "biblioteca", "muzeu", "teatru", "cinema", "atelier", "laborator", "seră",
+				"vulcan", "gheizer", "canion", "delta", "fiord", "jungla", "savana", "taiga", "arhipelag", "recif",
+				"tornada", "furtuna", "uragan", "viscol", "ceata", "aurora", "eclipsa", "meteor", "cometa", "constelatie",
+				"corb", "bufnita", "vultur", "soim", "liliac", "dihor", "vidra", "caprioara", "mistret", "arici",
+				"delfin", "caracatita", "meduza", "calamar", "rechin", "balena", "hipocamp", "piranha", "manta",
+				"tramvai", "metrou", "telecabina", "teleferic", "dirijabil", "hidroavion", "submarin", "drezina", "trotineta", "motocicleta",
+				"paleta", "sah", "poker", "zar", "darts", "biliard", "pingpong", "skateboard", "parasuta", "scafandru",
+				"espressor", "mojar", "tel", "razatoare", "tava", "strecuratoare", "polonic", "tocator", "borcan", "termos",
+				"cafea", "cacao", "scortisoara", "vanilie", "ghimbir", "cuisoare", "chimen", "coriandru", "busuioc", "rozmarin",
+				"tiramisu", "clatita", "gogosi", "cozonac", "sarmale", "ciorba", "mamaliga", "tocanita", "friptura", "salata",
+				"tamplar", "fierar", "ceasornicar", "bijutier", "arhitect", "pilot", "navigator", "detectiv", "paramedic", "pompier",
+				"fotograf", "regizor", "sculptor", "pictor", "actor", "dansator", "dirijor", "violonist", "chitarist", "tobar",
+				"parola", "criptare", "server", "router", "firewall", "aplicatie", "browser", "cursor", "tastatura", "monitor",
+				"oglinda", "lanterna", "lupa", "magnet", "baterie", "siguranta", "comutator", "intrupator", "priza", "cablu",
+				"caligrafie", "origami", "mandala", "graffiti", "colaj", "acuarela", "panza", "sevalet", "pensula", "ceramica",
+				"tramvai", "felinar", "bulevard", "piateta", "pasaj", "esplanada", "promenada", "faleza", "chei", "port",
+				"legenda", "mit", "enigma", "blestem", "comoara", "hartie", "jurnal", "scrisoare", "mesaj", "cod"
+			];
+
+			const WORDS_EN = [
+					// objects
+					"table", "chair", "wardrobe", "mirror", "key", "phone", "laptop", "television", "flashlight", "watch",
+					"pen", "book", "fountain pen", "backpack", "umbrella", "pillow", "blanket", "fridge", "stove", "oven",
+					"plate", "glass", "spoon", "fork", "knife", "frying pan", "pot", "kettle", "mug", "bottle",
+
+					// nature
+					"forest", "mountain", "river", "sea", "lake", "island", "beach", "desert", "plain", "hill",
+					"flower", "tree", "leaf", "root", "grass", "sand", "stone", "rock", "cloud", "rain",
+					"storm", "snow", "sun", "moon", "star", "sky", "rainbow", "volcano", "ice", "wave",
+
+					// animals
+					"dog", "cat", "horse", "cow", "sheep", "goat", "pig", "rabbit", "bear", "wolf",
+					"fox", "lion", "tiger", "elephant", "giraffe", "zebra", "snake", "frog", "fish", "dolphin",
+					"whale", "shark", "eagle", "owl", "pigeon", "swallow", "penguin", "butterfly", "bees", "spider",
+
+					// food
+					"bread", "cheese", "milk", "egg", "butter", "honey", "sugar", "salt", "pepper", "rice",
+					"pasta", "potato", "carrot", "onion", "garlic", "tomato", "cucumber", "pepper", "cabbage", "salad",
+					"apple", "pear", "banana", "orange", "lemon", "strawberry", "watermelon", "grape", "plum", "cherry",
+
+					// people & roles
+					"friend", "family", "child", "parent", "teacher", "doctor", "dentist", "engineer", "driver", "artist",
+					"singer", "actor", "writer", "painter", "photographer", "athlete", "dancer", "cook", "player", "leader",
+
+					// places
+					"city", "village", "house", "apartment block", "apartment", "office", "school", "university", "library",
+					"hospital", "pharmacy", "shop", "market", "restaurant", "cafe", "park", "stadium", "train station", "airport",
+
+					// transport
+					"car", "bus", "tram", "subway", "train", "airplane", "helicopter", "bicycle", "motorcycle", "ship",
+					"boat", "submarine", "rocket", "taxi", "scooter",
+
+					// abstract / general
+					"time", "silence", "noise", "speed", "heat", "cold", "light", "shadow", "energy", "power",
+					"courage", "fear", "joy", "sadness", "hope", "patience", "luck", "peace", "chaos", "order",
+
+					// rural life
+					"sheepfold", "shepherd", "herd", "transhumance", "flute", "stick",
+
+					// village structures
+					"porch", "house", "barn", "hayloft", "chicken coop", "well", "gate", "fence", "lane", "porch",
+
+					// landscapes
+					"hill", "clearing", "karst plateau", "grove", "meadow", "plain", "pasture", "spring",
+
+					// kitchen / household
+					"stove", "cooktop", "cauldron", "hearth", "barrel", "ladle", "bowl",
+
+					// fairs & inns
+					"fair", "festival", "markets", "inn", "tavern", "pub", "bar", "tavern", "rest stop",
+
+					// language
+					"word", "speech", "accent", "saying", "proverb", "story", "legend", "riddle",
+
+					// family
+					"grandfather", "grandmother", "grandchild", "son", "daughter", "uncle", "aunt", "cousin", "brother-in-law", "father-in-law",
+
+					// fate & emotion
+					"luck", "bad luck", "fate", "humor", "spirit", "temper", "patience", "longing", "sorrow", "joy",
+
+					// travel & land
+					"road", "path", "crossroads", "border", "estate", "field", "farmland", "plowing", "sowing",
+
+					// professions
+					"guard", "gendarme", "mayor", "teacher", "priest", "schoolmaster", "monk", "abbot", "hegumen", "parish priest",
+
+					// religion
+					"church", "monastery", "hermitage", "icon", "altar", "iconostasis", "candle", "incense",
+
+					// history
+					"fortress", "court", "nobleman", "warlord", "ruler", "outlaw", "flag", "sword", "rapier",
+
+					// playful / funny
+					"whim", "jester", "mischievous", "playful", "confused", "dizzy", "crazy", "clumsy",
+					"fool", "idiot", "loony", "cheesehead", "chubby", "fluffy", "scrunched", "messy-haired", "grumbling", "chaos",
+
+					// sweets & bakery
+					"bamboo", "donut", "pancake", "donuts", "pie", "bread roll", "pretzel", "pastry", "puff pastry", "pâté",
+
+					// clothing
+					"sock", "slipper", "flip-flops", "pajamas", "robe", "underwear", "sock", "cap", "baseball cap", "small hat",
+
+					// sounds
+					"babble", "stutter", "mumbling", "grumble", "rustle", "crack", "boom", "clang", "rattle", "noise",
+
+					// personality
+					"nag", "gossip", "grumpy", "complainer", "twisted", "envy", "snobbish", "airs", "fussy", "crazy",
+
+					// birds & farm
+					"tuft", "crest", "rooster", "chick", "hen", "goose", "drake", "turkey", "pigeon", "crow",
+
+					// noises
+					"horn", "trumpet", "siren", "whistle", "drum", "pop", "bang", "zap", "thud", "crash",
+
+					// chaos words
+					"wandering", "nowhere", "upside down", "mess", "jumble", "shambles", "big mess", "confusion", "tangle", "madness",
+
+					// play
+					"play", "mischief", "trickery", "scheming", "silliness", "prank", "antic", "joke", "farce", "spice",
+
+					// random / poetic
+					"flint", "pocketknife", "ladle", "boilers", "surge", "hammock", "lantern", "flight", "echo", "reflection",
+
+					// extra everyday objects
+				"lamp", "remote", "keyboard", "mouse", "charger", "headphones", "speaker", "camera", "tripod", "microphone",
+				"wallet", "coin", "notebook", "calendar", "clock", "alarm", "keychain", "sunglasses", "helmet", "backpack",
+
+				// home & rooms
+				"kitchen", "bathroom", "bedroom", "living room", "balcony", "garage", "hallway", "stairs", "elevator", "attic",
+				"basement", "window", "curtain", "door", "handle", "lock", "carpet", "shelf", "drawer", "mirror",
+
+				// nature & outdoors
+				"valley", "cliff", "cave", "trail", "summit", "waterfall", "stream", "pond", "shore", "coast",
+				"breeze", "fog", "mist", "dawn", "sunset", "twilight", "horizon", "thunder", "lightning", "hail",
+
+				// animals (common & fun)
+				"mouse", "rat", "hamster", "hedgehog", "squirrel", "deer", "moose", "boar", "camel", "donkey",
+				"parrot", "crow", "seagull", "sparrow", "peacock", "swan", "duck", "goose", "turkey", "crane",
+
+				// food & drinks
+				"soup", "sandwich", "burger", "pizza", "pasta", "steak", "sausage", "omelette", "salmon", "tuna",
+				"coffee", "espresso", "tea", "lemonade", "juice", "smoothie", "milkshake", "beer", "wine", "cocktail",
+
+				// people & roles
+				"neighbor", "stranger", "tourist", "guest", "host", "leader", "follower", "manager", "assistant", "volunteer",
+				"student", "coach", "referee", "judge", "lawyer", "detective", "journalist", "editor", "designer", "developer",
+
+				// places & buildings
+				"mall", "warehouse", "factory", "office building", "courthouse", "city hall", "embassy", "hotel", "hostel", "motel",
+				"museum", "gallery", "exhibition", "concert hall", "arena", "playground", "zoo", "aquarium", "park bench", "fountain",
+
+				// transport & travel
+				"highway", "intersection", "roundabout", "bridge", "tunnel", "parking lot", "garage", "gas station", "checkpoint", "border",
+				"suitcase", "passport", "ticket", "boarding pass", "platform", "terminal", "runway", "cockpit", "engine", "propeller",
+
+				// technology
+				"website", "app", "profile", "account", "password", "username", "notification", "message", "email", "attachment",
+				"upload", "download", "backup", "cloud", "server", "database", "algorithm", "update", "bug", "feature",
+
+				// abstract concepts
+				"choice", "decision", "mistake", "chance", "risk", "reward", "goal", "plan", "strategy", "failure",
+				"success", "pressure", "stress", "focus", "attention", "memory", "instinct", "intuition", "logic", "belief",
+
+				// emotions & states
+				"calm", "anger", "rage", "surprise", "shock", "relief", "pride", "shame", "guilt", "confidence",
+				"doubt", "trust", "suspicion", "curiosity", "boredom", "excitement", "fear", "panic", "hope", "despair",
+
+				// actions & verbs (noun-friendly)
+				"escape", "chase", "search", "discovery", "arrival", "departure", "collision", "explosion", "rescue", "capture",
+				"training", "practice", "competition", "challenge", "test", "trial", "experiment", "investigation", "mission", "quest",
+
+				// time & rhythm
+				"moment", "second", "minute", "hour", "deadline", "schedule", "routine", "break", "pause", "delay",
+				"beginning", "ending", "cycle", "phase", "turn", "round", "countdown", "timeout", "interval", "tempo",
+
+				// fun / playful
+				"banana peel", "whoopee cushion", "prank", "trick", "surprise party", "inside joke", "nickname", "meme", "gif", "sticker",
+				"high five", "facepalm", "wink", "shrug", "smirk", "giggle", "laughter", "tease", "mockery", "sarcasm",
+
+				// cinematic / adventure
+				"treasure", "map", "clue", "signal", "beacon", "hideout", "escape route", "safe house", "checkpoint", "ambush",
+				"guardian", "watchtower", "gate", "vault", "corridor", "passage", "chamber", "artifact", "relic", "legend"
+
+				];
+
+
+		const INSTRUCTIONS_RO = [
+			"Toți jucătorii primesc același cuvânt… mai puțin unul.",
+			"Un jucător este IMPOSTORUL și vede doar acest rol.",
+			"Pe rând, fiecare spune UN CUVÂNT legat de subiect.",
+			"Nu fi prea evident – impostorul ascultă atent 👀",
+			"După 3 runde, discutați și votați cine este impostorul.",
+			"Impostorul poate vorbi, minți sau crea îndoială.",
+			"Dacă este prins, începe primul în runda următoare."
 		];
 
+		const INSTRUCTIONS_EN = [
+			"All players see the same word… except one.",
+			"One player is the IMPOSTOR and sees only this role.",
+			"Each round, everyone says ONE word related to the topic.",
+			"Don’t be too obvious – the impostor is listening 👀",
+			"After 3 rounds, discuss and vote the impostor.",
+			"The impostor may speak, lie, or create doubt.",
+			"If discovered, the impostor starts the next game."
+		];
+
+		let LANG = "ro";
+
+		const UI = {
+			ro: {
+				title: "Impostor",
+				subtitle: "Un joc de deducție, suspiciune și bluff.",
+				start: "Începe jocul",
+				how: "Cum se joacă",
+				back: "Înapoi",
+				players: "Jucători",
+				setupSubtitle: "Alege numărul de jucători, apoi trece telefonul pe rând. Un singur jucător va vedea IMPOSTOR.",
+				setupHint: "După ce începi, telefonul se dă jucătorului 1. Ecranul negru ascunde cuvântul între jucători.",
+				startRound: "Începe runda",
+				player: "Jucător",
+				restart: "Repornește",
+				nextPlayerTap: "Următorul jucător: apasă pentru a vedea",
+				tapPass: "Apasă ecranul și dă telefonul următorului jucător",
+				doneTitle: "Gata",
+				newRound: "Rundă nouă",
+				goodLuck: "Spor la descoperit impostorul!",
+				impostor: "Impostor"
+			},
+			en: {
+				title: "Impostor",
+				subtitle: "A game of deduction, suspicion and bluff.",
+				start: "Start game",
+				how: "How to play",
+				back: "Back",
+				players: "Players",
+				setupSubtitle: "Choose the number of players, then pass the phone around. One player will see IMPOSTOR.",
+				setupHint: "After starting, give the phone to player 1. The black screen hides the word between players.",
+				startRound: "Start round",
+				player: "Player",
+				restart: "Restart",
+				nextPlayerTap: "Next player: tap to reveal",
+				tapPass: "Tap the screen and pass the phone to the next player",
+				doneTitle: "Done",
+				newRound: "New round",
+				goodLuck: "Good luck finding the impostor!",
+				impostor: "Impostor"
+			}
+		};
+
+		function t(key) {
+			return UI[LANG][key];
+		}
 
 		const app = document.getElementById("app");
-		const startBtn = document.getElementById("start");
-		const playersInput = document.getElementById("players");
 
 		let N = 0;
 		let word = "";
 		let impostorIndex = 0;
 		let currentPlayer = 1;
-		let phase = "setup";
+		let phase = "intro";
 
 		function randInt(min, max) {
 			return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
 
 		function pickWord() {
-			return WORDS[randInt(0, WORDS.length - 1)];
+			const list = LANG === "ro" ? WORDS_RO : WORDS_EN;
+			return list[randInt(0, list.length - 1)];
 		}
 
 		function clampPlayers(v) {
@@ -497,8 +678,15 @@
 			return n;
 		}
 
+		function toTitleCase(s) {
+			s = (s || "").trim();
+			if (!s) return s;
+			return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+		}
+
 		function startGame() {
-			N = clampPlayers(playersInput.value);
+			const playersEl = document.getElementById("players");
+			N = clampPlayers(playersEl ? playersEl.value : N || 5);
 			word = toTitleCase(pickWord());
 			impostorIndex = randInt(1, N);
 			currentPlayer = 1;
@@ -506,111 +694,208 @@
 			render();
 		}
 
+		function renderIntro() {
+			app.className = "screen";
+			app.innerHTML = `
+				<div class="wrap">
+					<div class="card">
+						<div class="brand">
+							<div class="logo"></div>
+							<div class="title">${t("title")}</div>
+						</div>
+
+						<p class="subtitle">${t("subtitle")}</p>
+
+						<div class="row">
+							<button id="go" class="btn">${t("start")}</button>
+							<button id="how" class="btn btn2">${t("how")}</button>
+						</div>
+
+						<div class="row">
+							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			document.getElementById("go").onclick = () => {
+				phase = "setup";
+				render();
+			};
+
+			document.getElementById("how").onclick = () => {
+				phase = "instructions";
+				render();
+			};
+
+			document.getElementById("lang").onclick = () => {
+				LANG = LANG === "ro" ? "en" : "ro";
+				renderIntro();
+			};
+		}
+
+		function renderInstructions() {
+			const list = LANG === "ro" ? INSTRUCTIONS_RO : INSTRUCTIONS_EN;
+
+			app.className = "screen";
+			app.innerHTML = `
+				<div class="wrap">
+					<div class="card">
+						<div class="title">${t("how")}</div>
+
+						<ul style="text-align:left; margin-top:16px; line-height:1.6;">
+							${list.map(i => `<li>• ${i}</li>`).join("")}
+						</ul>
+
+						<div class="row" style="margin-top:20px">
+							<button id="back" class="btn btn2">${t("back")}</button>
+						</div>
+
+						<div class="row">
+							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			document.getElementById("back").onclick = () => {
+				phase = "intro";
+				render();
+			};
+
+			document.getElementById("lang").onclick = () => {
+				LANG = LANG === "ro" ? "en" : "ro";
+				renderInstructions();
+			};
+		}
+
 		function renderSetup() {
 			app.className = "screen";
 			app.innerHTML = `
-        <div class="wrap">
-          <div class="card">
-            <div class="brand">
-              <div class="logo"></div>
-              <div class="title">Impostor</div>
-            </div>
-            <p class="subtitle">Alege numărul de jucători, apoi trece telefonul pe rând. Un singur jucător va vedea <b>IMPOSTOR</b>.</p>
-            <div class="row">
-              <div class="field">
-                <label for="players">Jucători</label>
-                <input id="players" type="number" min="3" max="20" value="${N || 5}" />
-              </div>
-              <button id="start" class="btn">Începe runda</button>
-            </div>
-            <div class="hint">După ce începi, telefonul se dă jucătorului 1. Ecranul negru ascunde cuvântul între jucători.</div>
-          </div>
-        </div>
-      `;
-			document.getElementById("start").addEventListener("click", () => {
-				playersInput.value = document.getElementById("players").value;
-				startGame();
-			});
+				<div class="wrap">
+					<div class="card">
+						<div class="brand">
+							<div class="logo"></div>
+							<div class="title">${t("title")}</div>
+						</div>
+						<p class="subtitle">${t("setupSubtitle")}</p>
+
+						<div class="row">
+							<div class="field">
+								<label for="players">${t("players")}</label>
+								<input id="players" type="number" min="3" max="20" value="${N || 5}" />
+							</div>
+							<button id="start" class="btn">${t("startRound")}</button>
+						</div>
+
+						<div class="hint">${t("setupHint")}</div>
+
+						<div class="row">
+							<button id="how" class="btn btn2">${t("how")}</button>
+							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			document.getElementById("start").onclick = () => startGame();
+			document.getElementById("how").onclick = () => { phase = "instructions"; render(); };
+			document.getElementById("lang").onclick = () => { LANG = LANG === "ro" ? "en" : "ro"; renderSetup(); };
 		}
 
 		function renderTopbar() {
 			return `
-        <div class="topbar">
-          <div class="pill">Jucător ${currentPlayer} / ${N}</div>
-          <div class="link" id="restart">Repornește</div>
-        </div>
-      `;
+				<div class="topbar">
+					<div class="pill">${t("player")} ${currentPlayer} / ${N}</div>
+					<div style="display:flex; gap:10px; pointer-events:auto;">
+						<div class="link" id="restart">${t("restart")}</div>
+					</div>
+				</div>
+			`;
+		}
+
+		function wireTopbar() {
+			const restartEl = document.getElementById("restart");
+			if (restartEl) {
+				restartEl.onclick = (e) => {
+					e.stopPropagation();
+					phase = "setup";
+					render();
+				};
+			}
+			const langEl = document.getElementById("lang");
+			if (langEl) {
+				langEl.onclick = (e) => {
+					e.stopPropagation();
+					LANG = LANG === "ro" ? "en" : "ro";
+					render();
+				};
+			}
 		}
 
 		function renderHide() {
 			app.className = "screen blackout";
 			app.innerHTML = `
-        ${renderTopbar()}
-        <div class="wrap tapArea">
-          <div class="card">
-            <div class="big word"> </div>
-            <div class="sub">Următorul jucător: apasă pentru a vedea</div>
-          </div>
-        </div>
-      `;
-			document.getElementById("restart").addEventListener("click", (e) => {
-				e.stopPropagation();
-				phase = "setup";
-				render();
-			});
-		}
-
-		function toTitleCase(s) {
-			s = (s || "").trim();
-			if (!s) return s;
-			return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+				${renderTopbar()}
+				<div class="wrap tapArea">
+					<div class="card">
+						<div class="big word"> </div>
+						<div class="sub">${t("nextPlayerTap")}</div>
+					</div>
+				</div>
+			`;
+			wireTopbar();
 		}
 
 		function renderReveal() {
 			const isImp = currentPlayer === impostorIndex;
-			const text = isImp ? "Impostor" : word;
+			const text = isImp ? t("impostor") : word;
 			const cls = "word";
+
 
 			app.className = "screen";
 			app.innerHTML = `
-					${renderTopbar()}
-					<div class="wrap tapArea">
+				${renderTopbar()}
+				<div class="wrap tapArea">
 					<div class="card">
 						<div class="big ${cls}">${text}</div>
-						<div class="sub">Apasă ecranul și dă telefonul următorului jucător</div>
+						<div class="sub">${t("tapPass")}</div>
 					</div>
-					</div>
-				`;
-			document.getElementById("restart").addEventListener("click", (e) => {
-				e.stopPropagation();
-				phase = "setup";
-				render();
-			});
+				</div>
+			`;
+			wireTopbar();
 		}
-
 
 		function renderDone() {
 			app.className = "screen";
 			app.innerHTML = `
 				<div class="wrap">
-				<div class="card">
-					<div class="brand">
-					<div class="logo"></div>
-					<div class="title">Gata</div>
+					<div class="card">
+						<div class="brand">
+							<div class="logo"></div>
+							<div class="title">${t("doneTitle")}</div>
+						</div>
+						<div class="doneGrid">
+							<button id="again" class="btn">${t("newRound")}</button>
+							<button id="back" class="btn btn2">${t("back")}</button>
+						</div>
+						<div class="hint">${t("goodLuck")}</div>
+
+						<div class="row">
+							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
+						</div>
 					</div>
-					<div class="doneGrid">
-					<button id="again" class="btn">Rundă nouă</button>
-					<button id="back" class="btn btn2">Înapoi</button>
-					</div>
-					<div class="hint">Spor la descoperit impostorul!</div>
-				</div>
 				</div>
 			`;
-			document.getElementById("again").addEventListener("click", startGame);
-			document.getElementById("back").addEventListener("click", () => { phase = "setup"; render(); });
+
+			document.getElementById("again").onclick = () => startGame();
+			document.getElementById("back").onclick = () => { phase = "setup"; render(); };
+			document.getElementById("lang").onclick = () => { LANG = LANG === "ro" ? "en" : "ro"; renderDone(); };
 		}
 
 		function render() {
+			if (phase === "intro") return renderIntro();
+			if (phase === "instructions") return renderInstructions();
 			if (phase === "setup") return renderSetup();
 			if (phase === "hide") return renderHide();
 			if (phase === "reveal") return renderReveal();
@@ -631,8 +916,6 @@
 			}
 		}
 
-		startBtn.addEventListener("click", startGame);
-
 		let lastTap = 0;
 		function guardedTap() {
 			const now = Date.now();
@@ -641,8 +924,15 @@
 			nextPhase();
 		}
 
-		document.addEventListener("click", () => { if (phase !== "setup") guardedTap(); });
-		document.addEventListener("touchend", () => { if (phase !== "setup") guardedTap(); }, { passive: true });
+		document.addEventListener("click", (e) => {
+			if (phase === "hide" || phase === "reveal") guardedTap();
+		});
+
+		document.addEventListener("touchend", (e) => {
+			if (phase === "hide" || phase === "reveal") guardedTap();
+		}, { passive: true });
+
+		render();
 	</script>
 </body>
 
