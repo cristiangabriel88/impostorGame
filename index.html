@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="ro">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+	<title>Impostor</title>
+
+	<style>
+		:root {
+			--bg0: #070A12;
+			--bg1: #0B1020;
+			--card: rgba(255, 255, 255, .06);
+			--card2: rgba(255, 255, 255, .09);
+			--stroke: rgba(255, 255, 255, .10);
+			--text: rgba(255, 255, 255, .92);
+			--muted: rgba(255, 255, 255, .66);
+			--accent: #7C5CFF;
+			--accent2: #21D4FD;
+			--danger: #FF4D6D;
+			--shadow: 0 18px 60px rgba(0, 0, 0, .55);
+			--radius: 22px;
+		}
+
+		* {
+			box-sizing: border-box;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+			color: var(--text);
+			background: radial-gradient(1200px 900px at 20% 10%, rgba(124, 92, 255, .25), transparent 55%),
+				radial-gradient(900px 700px at 80% 20%, rgba(33, 212, 253, .18), transparent 55%),
+				radial-gradient(900px 700px at 50% 90%, rgba(255, 77, 109, .12), transparent 60%),
+				linear-gradient(180deg, var(--bg0), var(--bg1));
+			overflow: hidden;
+		}
+
+		.screen {
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			text-align: center;
+			user-select: none;
+		}
+
+		.wrap {
+			width: min(560px, 100%);
+		}
+
+		.card {
+			position: relative;
+			background: linear-gradient(180deg, var(--card), rgba(255, 255, 255, .035));
+			border: 1px solid var(--stroke);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+			padding: 26px 20px;
+			backdrop-filter: blur(10px);
+		}
+
+		.brand {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+
+		.logo {
+			width: 14px;
+			height: 14px;
+			border-radius: 999px;
+			background: radial-gradient(circle at 30% 30%, #fff, rgba(255, 255, 255, .15) 35%, transparent 60%),
+				linear-gradient(135deg, var(--accent), var(--accent2));
+			box-shadow: 0 0 0 4px rgba(124, 92, 255, .18), 0 12px 30px rgba(124, 92, 255, .18);
+		}
+
+		.title {
+			font-size: 38px;
+			font-weight: 850;
+			letter-spacing: .3px;
+			margin: 4px 0 2px;
+		}
+
+		.subtitle {
+			color: var(--muted);
+			font-size: 15px;
+			margin: 0 0 18px;
+			line-height: 1.35;
+		}
+
+		.row {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+			justify-content: center;
+			flex-wrap: wrap;
+			margin-top: 10px;
+		}
+
+		.field {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 12px 14px;
+			background: linear-gradient(180deg, rgba(255, 255, 255, .085), rgba(255, 255, 255, .04));
+			border: 1px solid rgba(255, 255, 255, .10);
+			border-radius: 18px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+		}
+
+		.field label {
+			font-size: 14px;
+			color: var(--muted);
+		}
+
+		input[type="number"] {
+			width: 90px;
+			border: 0;
+			outline: 0;
+			padding: 6px 8px;
+			font-size: 22px;
+			font-weight: 800;
+			color: var(--text);
+			background: transparent;
+			text-align: center;
+			appearance: textfield;
+		}
+
+		input[type="number"]::-webkit-outer-spin-button,
+		input[type="number"]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		.btn {
+			border: 0;
+			cursor: pointer;
+			padding: 14px 18px;
+			border-radius: 18px;
+			font-size: 16px;
+			font-weight: 850;
+			letter-spacing: .2px;
+			color: #0b0f1c;
+			background: linear-gradient(135deg, var(--accent), var(--accent2));
+			box-shadow: 0 14px 40px rgba(33, 212, 253, .18), 0 16px 50px rgba(124, 92, 255, .16);
+			transform: translateY(0);
+			transition: transform .12s ease, filter .12s ease;
+			min-width: 160px;
+		}
+
+		.btn:active {
+			transform: translateY(1px);
+			filter: brightness(.95);
+		}
+
+		.hint {
+			margin-top: 14px;
+			color: var(--muted);
+			font-size: 14px;
+			line-height: 1.4;
+		}
+
+		.topbar {
+			position: fixed;
+			top: 14px;
+			left: 14px;
+			right: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			pointer-events: none;
+			font-size: 13px;
+			color: rgba(255, 255, 255, .68);
+		}
+
+		.pill {
+			pointer-events: none;
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: rgba(0, 0, 0, .25);
+			backdrop-filter: blur(8px);
+		}
+
+		.link {
+			pointer-events: auto;
+			cursor: pointer;
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: rgba(0, 0, 0, .25);
+			backdrop-filter: blur(8px);
+			text-decoration: none;
+			color: rgba(255, 255, 255, .82);
+		}
+
+		.link:active {
+			filter: brightness(.95);
+		}
+
+		.big {
+			font-size: clamp(44px, 7vw, 70px);
+			font-weight: 950;
+			letter-spacing: .6px;
+			margin: 4px 0 0;
+		}
+
+		.big .first {
+			font-size: 1.35em;
+			line-height: 0.9;
+			font-weight: 950;
+		}
+
+		.big .rest {
+			font-size: 1em;
+		}
+
+		.word {
+			background: linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .62));
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			text-shadow: 0 18px 60px rgba(0, 0, 0, .35);
+		}
+
+		.impostor {
+			background: linear-gradient(135deg, var(--danger), #FFD166);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			text-shadow: 0 18px 60px rgba(0, 0, 0, .35);
+		}
+
+		.sub {
+			margin-top: 12px;
+			font-size: 15px;
+			color: rgba(255, 255, 255, .72);
+		}
+
+		.tapArea {
+			width: 100%;
+		}
+
+		.blackout {
+			background: #000;
+		}
+
+		.blackout .pill,
+		.blackout .link {
+			background: rgba(255, 255, 255, .08);
+			border-color: rgba(255, 255, 255, .14);
+			color: rgba(255, 255, 255, .90);
+		}
+
+		.blackout .card {
+			background: rgba(255, 255, 255, .05);
+			border-color: rgba(255, 255, 255, .10);
+		}
+
+		.doneGrid {
+			display: flex;
+			gap: 12px;
+			justify-content: center;
+			flex-wrap: wrap;
+			margin-top: 16px;
+		}
+
+		.btn2 {
+			border: 1px solid rgba(255, 255, 255, .14);
+			background: rgba(255, 255, 255, .06);
+			color: rgba(255, 255, 255, .9);
+			box-shadow: none;
+			min-width: 160px;
+		}
+
+		.metaLine {
+			margin-top: 10px;
+			font-size: 14px;
+			color: rgba(255, 255, 255, .75);
+			line-height: 1.45;
+		}
+
+		.metaLine b {
+			color: rgba(255, 255, 255, .92);
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" class="screen">
+		<div class="wrap">
+			<div class="card">
+				<div class="brand">
+					<div class="logo"></div>
+					<div class="title">Impostor</div>
+				</div>
+				<p class="subtitle">Alege numărul de jucători, apoi trece telefonul pe rând. Un singur jucător va vedea
+					<b>IMPOSTOR</b>.
+				</p>
+
+				<div class="row">
+					<div class="field">
+						<label for="players">Jucători</label>
+						<input id="players" type="number" min="3" max="20" value="5" />
+					</div>
+					<button id="start" class="btn">Începe runda</button>
+				</div>
+
+				<div class="hint">După ce începi, telefonul se dă jucătorului 1. Ecranul negru ascunde cuvântul între
+					jucători.</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const WORDS = [
+			// obiecte
+			"masa", "scaun", "dulap", "oglinda", "cheie", "telefon", "laptop", "televizor", "lanterna", "ceas",
+			"pix", "carte", "stilou", "rucsac", "umbrela", "perna", "patura", "frigider", "aragaz", "cuptor",
+			"farfurie", "pahar", "lingura", "furculita", "cutit", "tigaie", "oala", "ibric", "cana", "sticla",
+
+			// natura
+			"padure", "munte", "rau", "mare", "lac", "insula", "plaja", "desert", "campie", "deal",
+			"floare", "copac", "frunza", "radacina", "iarba", "nisip", "piatra", "stanca", "nor", "ploaie",
+			"furtuna", "zapada", "soare", "luna", "stea", "cer", "curcubeu", "vulcan", "gheata", "val",
+
+			// animale
+			"caine", "pisica", "cal", "vaca", "oaie", "capra", "porc", "iepure", "urs", "lup",
+			"vulpe", "leu", "tigru", "elefant", "girafa", "zebra", "sarpe", "broasca", "peste", "delfin",
+			"balena", "rechin", "vultur", "bufnita", "porumbel", "randunica", "pinguin", "fluture", "albine", "paianjen",
+
+			// mancare
+			"paine", "branza", "lapte", "ou", "unt", "miere", "zahar", "sare", "piper", "orez",
+			"paste", "cartof", "morcov", "ceapa", "usturoi", "rosie", "castravete", "ardei", "varza", "salata",
+			"mar", "para", "banana", "portocala", "lamaie", "capsuna", "pepene", "strugure", "pruna", "cireasa",
+
+			// oameni & actiuni
+			"prieten", "familie", "copil", "parinte", "profesor", "medic", "dentist", "inginer", "sofer", "artist",
+			"cantaret", "actor", "scriitor", "pictor", "fotograf", "sportiv", "dansator", "bucatar", "jucator", "lider",
+
+			// locuri
+			"oras", "sat", "casa", "bloc", "apartament", "birou", "scoala", "liceu", "universitate", "biblioteca",
+			"spital", "farmacie", "magazin", "piata", "restaurant", "cafenea", "parc", "stadion", "gara", "aeroport",
+
+			// transport
+			"masina", "autobuz", "tramvai", "metrou", "tren", "avion", "elicopter", "bicicleta", "motocicleta", "vapor",
+			"barca", "submarin", "racheta", "taxi", "trotineta",
+
+			// abstract / diverse
+			"timp", "liniste", "zgomot", "viteza", "caldura", "frig", "lumina", "umbra", "energie", "putere",
+			"curaj", "frica", "bucurie", "tristete", "speranta", "rabdare", "noroc", "pace", "haos", "ordine",
+
+			// romanian specific
+			"mamaliga", "sarmale", "cozonac", "ciorba", "zacusca", "mititei", "bulz", "tocanita", "friptura", "papanasi",
+			"palinca", "tuica", "visinata", "afinata", "branza", "telemea", "cascaval", "smantana", "iaurt", "jumari",
+
+			"ie", "catrinta", "opinca", "brau", "marama", "caciula", "cojoc", "sumar", "chimire", "itari",
+
+			"doina", "hora", "sarba", "calus", "lautari", "fluier", "cobza", "taragot", "vioara", "toba",
+
+			"colinda", "plugusor", "sorcova", "martisor", "capra", "ursul", "calusari", "colac", "bucium", "clopot",
+
+			"stana", "cioban", "mioara", "turma", "transhumanta", "baci", "fluier", "bat", "caciula", "cojoc",
+
+			"prispa", "casa", "sura", "fanar", "cotet", "fantana", "poarta", "gard", "ulita", "prispă",
+
+			"deal", "codru", "poiana", "padis", "crang", "lunca", "ses", "pajiste", "muntisor", "izvor",
+
+			"sobă", "plita", "ceaun", "vatră", "lingurar", "donita", "putina", "polonic", "blid", "strachina",
+
+			"targ", "balci", "iarmaroc", "piete", "han", "carciuma", "crasma", " birt", "taverna", "popas",
+
+			"vorba", "grai", "accent", "zicala", "proverb", "poveste", "basm", "legenda", "snoava", "ghicitoare",
+
+			"mos", "baba", "nepot", "fiu", "fica", "unchi", "matusa", "verisor", "cumnat", "socru",
+
+			"noroc", "ghinion", "soarta", "haz", "spirit", "fire", "rabdare", "dor", "jale", "bucurie",
+
+			"drum", "poteca", "rascruce", "hotar", "mosie", "ogor", "tarina", "holda", "aratura", "semanat",
+
+			"paznic", "jandarm", "primar", "invatator", "preot", "dascal", "calugar", "staret", "egumen", "paroh",
+
+			"biserica", "manastire", "schit", "troita", "icoana", "altar", "clopotnita", "catapeteasma", "lumanare", "tamai",
+
+			"cetate", "curte", "boier", "voievod", "domnitor", "haiduc", "pandur", "steag", "sabie", "spada",
+
+			// funny / playful
+			"moft", "bufon", "nazdravan", "ghidus", "zbanghiu", "aiurit", "zapacit", "traznit", "bleg",
+			"gogoman", "tampit", "zurlu", "cascaval", "burtos", "pufos", "mototol", "ciufulit", "boscorodit", "harababura",
+
+			"bambus", "gogoasa", "clatita", "gogosi", "placinta", "chifla", "covrig", "foietaj", "pufarina", "pateu",
+
+			"ciorapel", "papuc", "slapi", "pijama", "halat", "chiloti", "soseta", "basca", "sapca", "palariuta",
+
+			"gargara", "balbaiala", "bolboroseala", "mormaiala", "fasait", "pocnitura", "bubuitura", "zdranganeala", "harait", "zgomotel",
+
+			"pisalog", "barfitor", "morocanos", "bombanitor", "sucit", "pizma", "fitzos", "figuri", "mofturos", "tacanit",
+
+			"burtica", "nasuc", "ochisor", "manuta", "piciorus", "fundulet", "urechiusa", "botic", "mustacioara", "barbita",
+
+			"ciuf", "mot", "cocos", "pui", "gaina", "gasca", "ratoi", "curcan", "porumbel", "cioara",
+
+			"claxon", "trompeta", "sirena", "fluier", "toba", "poc", "bang", "zbang", "buf", "trosc",
+
+			"teleleu", "aiurea", "anapoda", "varza", "talmes-balmes", "harcea-parcea", "bulibaseala", "zapaceala", "incurcatura", "balamuc",
+
+			"joaca", "ghidusie", "pacaleala", "smecherie", "prostioara", "nazbatie", "pozna", "gluma", "farsa", "picanterie",
+
+			// random interesting romanian
+			"amnar", "briceag", "caldarus", "cazane", "talaz", "hamac", "felinar", "zbor", "ecou", "oglindire",
+			"pumn", "cot", "genunchi", "umeri", "ceafa", "incheietura", "talpa", "degetar", "unghiera", "perna",
+
+			"alunecare", "scanteie", "clipa", "puls", "freamat", "tresarire", "vibratie", "ecart", "spirala", "unda",
+
+			"colind", "taina", "tainic", "vestitor", "pribeag", "ratacitor", "calator", "popas", "chemare", "hotar",
+
+			"busuioc", "pelin", "lavanda", "mac", "sunatoare", "cimbru", "isop", "menta", "rozmarin", "salvie",
+
+			"amurg", "zor", "miez", "umbra", "lucire", "sclipire", "tremur", "fosnet", "soapta", "susur",
+
+			"atelier", "manuscris", "coperta", "sigla", "emblema", "insigna", "medalie", "trofeu", "placheta", "diploma",
+
+			"pluta", "carma", "ancora", "cang", "panza", "catarg", "corabie", "galera", "vasla", "sfoara",
+
+			"abur", "fum", "cenusa", "jar", "vapaie", "scoria", "magma", "lava", "crater", "tuf",
+
+			"cristal", "reflex", "spectru", "prisma", "lentila", "filtru", "diafragma", "focus", "claritate", "distorsiune",
+
+			"radar", "sonar", "semnal", "impuls", "frecventa", "interferenta", "latenta", "releu", "conductor", "izolator",
+
+			"zodie", "horoscop", "astrolab", "talisman", "amuleta", "vraja", "descantec", "ritual", "simbol", "semn",
+
+			"busola", "meridian", "paralela", "azimut", "altitudine", "latitudine", "orizont", "zenit", "nadir", "echinocțiu",
+
+			"tipar", "gravura", "relief", "textura", "patina", "nuanta", "pigment", "contrast", "ton", "umbrare",
+
+			"pavilion", "arcada", "colonada", "fronton", "cupola", "balustrada", "scară", "pasarelă", "belvedere", "loggie",
+
+			"fragil", "elastic", "dens", "poros", "mat", "lucios", "opac", "transparent", "fluid", "solid",
+
+			"miraj", "iluzie", "paradox", "ecou", "abis", "vertij", "enigma", "mister", "labirint", "portal",
+
+
+			"far", "busola", "catarg", "binoclu", "harta", "pergament", "sigiliu", "amfora", "clepsidra", "candelabru",
+			"bumerang", "harpon", "catuse", "armura", "coif", "spada", "pumnal", "scut", "arc", "sageata",
+			"carusel", "labirint", "sirena", "pirat", "viking", "samurai", "gladiator", "magician", "alchimist", "astronaut",
+			"templu", "cetate", "castel", "palat", "catacomba", "ruina", "turn", "pod", "tunel", "caverna",
+			"observator", "far", "planetariu", "biblioteca", "muzeu", "teatru", "cinema", "atelier", "laborator", "seră",
+			"vulcan", "gheizer", "canion", "delta", "fiord", "jungla", "savana", "taiga", "arhipelag", "recif",
+			"tornada", "furtuna", "uragan", "viscol", "ceata", "aurora", "eclipsa", "meteor", "cometa", "constelatie",
+			"corb", "bufnita", "vultur", "soim", "liliac", "dihor", "vidra", "caprioara", "mistret", "arici",
+			"delfin", "caracatita", "meduza", "calamar", "rechin", "balena", "hipocamp", "piranha", "manta",
+			"tramvai", "metrou", "telecabina", "teleferic", "dirijabil", "hidroavion", "submarin", "drezina", "trotineta", "motocicleta",
+			"paleta", "sah", "poker", "zar", "darts", "biliard", "pingpong", "skateboard", "parasuta", "scafandru",
+			"espressor", "mojar", "tel", "razatoare", "tava", "strecuratoare", "polonic", "tocator", "borcan", "termos",
+			"cafea", "cacao", "scortisoara", "vanilie", "ghimbir", "cuisoare", "chimen", "coriandru", "busuioc", "rozmarin",
+			"tiramisu", "clatita", "gogosi", "cozonac", "sarmale", "ciorba", "mamaliga", "tocanita", "friptura", "salata",
+			"tamplar", "fierar", "ceasornicar", "bijutier", "arhitect", "pilot", "navigator", "detectiv", "paramedic", "pompier",
+			"fotograf", "regizor", "sculptor", "pictor", "actor", "dansator", "dirijor", "violonist", "chitarist", "tobar",
+			"parola", "criptare", "server", "router", "firewall", "aplicatie", "browser", "cursor", "tastatura", "monitor",
+			"oglinda", "lanterna", "lupa", "magnet", "baterie", "siguranta", "comutator", "intrupator", "priza", "cablu",
+			"caligrafie", "origami", "mandala", "graffiti", "colaj", "acuarela", "panza", "sevalet", "pensula", "ceramica",
+			"tramvai", "felinar", "bulevard", "piateta", "pasaj", "esplanada", "promenada", "faleza", "chei", "port",
+			"legenda", "mit", "enigma", "blestem", "comoara", "hartie", "jurnal", "scrisoare", "mesaj", "cod"
+		];
+
+
+		const app = document.getElementById("app");
+		const startBtn = document.getElementById("start");
+		const playersInput = document.getElementById("players");
+
+		let N = 0;
+		let word = "";
+		let impostorIndex = 0;
+		let currentPlayer = 1;
+		let phase = "setup";
+
+		function randInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		function pickWord() {
+			return WORDS[randInt(0, WORDS.length - 1)];
+		}
+
+		function clampPlayers(v) {
+			let n = Number(v || 0);
+			if (!Number.isFinite(n) || n < 3) n = 3;
+			if (n > 20) n = 20;
+			return n;
+		}
+
+		function startGame() {
+			N = clampPlayers(playersInput.value);
+			word = toTitleCase(pickWord());
+			impostorIndex = randInt(1, N);
+			currentPlayer = 1;
+			phase = "hide";
+			render();
+		}
+
+		function renderSetup() {
+			app.className = "screen";
+			app.innerHTML = `
+        <div class="wrap">
+          <div class="card">
+            <div class="brand">
+              <div class="logo"></div>
+              <div class="title">Impostor</div>
+            </div>
+            <p class="subtitle">Alege numărul de jucători, apoi trece telefonul pe rând. Un singur jucător va vedea <b>IMPOSTOR</b>.</p>
+            <div class="row">
+              <div class="field">
+                <label for="players">Jucători</label>
+                <input id="players" type="number" min="3" max="20" value="${N || 5}" />
+              </div>
+              <button id="start" class="btn">Începe runda</button>
+            </div>
+            <div class="hint">După ce începi, telefonul se dă jucătorului 1. Ecranul negru ascunde cuvântul între jucători.</div>
+          </div>
+        </div>
+      `;
+			document.getElementById("start").addEventListener("click", () => {
+				playersInput.value = document.getElementById("players").value;
+				startGame();
+			});
+		}
+
+		function renderTopbar() {
+			return `
+        <div class="topbar">
+          <div class="pill">Jucător ${currentPlayer} / ${N}</div>
+          <div class="link" id="restart">Repornește</div>
+        </div>
+      `;
+		}
+
+		function renderHide() {
+			app.className = "screen blackout";
+			app.innerHTML = `
+        ${renderTopbar()}
+        <div class="wrap tapArea">
+          <div class="card">
+            <div class="big word"> </div>
+            <div class="sub">Următorul jucător: apasă pentru a vedea</div>
+          </div>
+        </div>
+      `;
+			document.getElementById("restart").addEventListener("click", (e) => {
+				e.stopPropagation();
+				phase = "setup";
+				render();
+			});
+		}
+
+		function toTitleCase(s) {
+			s = (s || "").trim();
+			if (!s) return s;
+			return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+		}
+
+		function renderReveal() {
+			const isImp = currentPlayer === impostorIndex;
+			const text = isImp ? "Impostor" : word;
+			const cls = "word";
+
+			app.className = "screen";
+			app.innerHTML = `
+					${renderTopbar()}
+					<div class="wrap tapArea">
+					<div class="card">
+						<div class="big ${cls}">${text}</div>
+						<div class="sub">Apasă ecranul și dă telefonul următorului jucător</div>
+					</div>
+					</div>
+				`;
+			document.getElementById("restart").addEventListener("click", (e) => {
+				e.stopPropagation();
+				phase = "setup";
+				render();
+			});
+		}
+
+
+		function renderDone() {
+			app.className = "screen";
+			app.innerHTML = `
+				<div class="wrap">
+				<div class="card">
+					<div class="brand">
+					<div class="logo"></div>
+					<div class="title">Gata</div>
+					</div>
+					<div class="doneGrid">
+					<button id="again" class="btn">Rundă nouă</button>
+					<button id="back" class="btn btn2">Înapoi</button>
+					</div>
+					<div class="hint">Spor la descoperit impostorul!</div>
+				</div>
+				</div>
+			`;
+			document.getElementById("again").addEventListener("click", startGame);
+			document.getElementById("back").addEventListener("click", () => { phase = "setup"; render(); });
+		}
+
+		function render() {
+			if (phase === "setup") return renderSetup();
+			if (phase === "hide") return renderHide();
+			if (phase === "reveal") return renderReveal();
+			if (phase === "done") return renderDone();
+		}
+
+		function nextPhase() {
+			if (phase === "hide") {
+				phase = "reveal";
+				render();
+				return;
+			}
+			if (phase === "reveal") {
+				if (currentPlayer >= N) phase = "done";
+				else { currentPlayer += 1; phase = "hide"; }
+				render();
+				return;
+			}
+		}
+
+		startBtn.addEventListener("click", startGame);
+
+		let lastTap = 0;
+		function guardedTap() {
+			const now = Date.now();
+			if (now - lastTap < 250) return;
+			lastTap = now;
+			nextPhase();
+		}
+
+		document.addEventListener("click", () => { if (phase !== "setup") guardedTap(); });
+		document.addEventListener("touchend", () => { if (phase !== "setup") guardedTap(); }, { passive: true });
+	</script>
+</body>
+
+</html>
