@@ -67,10 +67,14 @@
 
 		.brand {
 			display: flex;
-			align-items: center;
+			align-items: baseline;
 			justify-content: center;
 			gap: 10px;
 			margin-bottom: 10px;
+		}
+
+		.logo {
+			transform: translateY(-6px);
 		}
 
 		.kofiWrap {
@@ -281,6 +285,26 @@
 			box-shadow: none;
 			min-width: 160px;
 		}
+
+		ul {
+			list-style: none;
+			padding-left: 0;
+		}
+
+		li {
+			display: flex;
+			align-items: flex-start;
+			gap: 10px;
+			line-height: 1.6;
+		}
+
+		li::before {
+			content: "•";
+			margin-top: 0.1em;
+			color: currentColor;
+		}
+
+
 	</style>
 </head>
 
