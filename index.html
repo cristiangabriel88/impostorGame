@@ -382,6 +382,22 @@
 			color: #111;
 		}
 
+			.wordInput{
+			width: 240px;
+			max-width: 70vw;
+			border: 1px solid rgba(255,255,255,.14);
+			border-radius: 16px;
+			background: rgba(255,255,255,.06);
+			color: var(--text);
+			padding: 12px 14px;
+			font-size: 16px;
+			font-weight: 750;
+			outline: none;
+		}
+		.wordInput::placeholder{
+			color: rgba(255,255,255,.55);
+		}
+
 	</style>
 </head>
 
@@ -698,7 +714,7 @@
 
 
 		const INSTRUCTIONS_RO = [
-			"Toți jucătorii primesc același cuvânt… mai puțin unul.",
+			"Toți jucătorii mai puțin unul primesc același cuvânt.",
 			"Acesta se va preface că știe și el cuvântul.",
 			"Pe rând, fiecare spune UN CUVÂNT legat de subiect.",
 			"Nu fi prea evident – impostorul ascultă atent 👀",
@@ -708,7 +724,7 @@
 		];
 
 		const INSTRUCTIONS_EN = [
-			"All players see the same word… except one.",
+			"All players except one see the same word.",
 			"That player will pretend to know the word as well.",
 			"Each round, everyone says ONE word related to the topic.",
 			"Don’t be too obvious – the impostor is listening 👀",
@@ -719,6 +735,12 @@
 
 		let LANG = "ro";
 
+		const STORAGE_CUSTOM_WORD = "impostor_customWord";
+		const STORAGE_CUSTOM_UI = "impostor_customWordUI";
+
+		let customWord = localStorage.getItem(STORAGE_CUSTOM_WORD) || "";
+		let useCustomWordUI = localStorage.getItem(STORAGE_CUSTOM_UI) === "1" || !!customWord.trim();
+
 		const UI = {
 			ro: {
 				title: "Impostor",
@@ -727,10 +749,10 @@
 				how: "Cum se joacă",
 				back: "Înapoi",
 				players: "Jucători",
-				setupSubtitle: "Alege numărul de jucători, citește cuvântul apoi paseaza telefonul. Un jucător va fi impostor.",
+				setupSubtitle: "Alege numărul de jucători, citește cuvântul apoi paseaza telefonul. Unul dintre voi va fi impostor.",
 				startRound: "Începe runda",
 				player: "Jucător",
-				restart: "Repornește",
+				restart: "Înapoi",
 				nextPlayerTap: "Apasă pentru a vedea cuvântul",
 				tapPass: "Apasă ecranul și dă telefonul următorului jucător",
 				doneTitle: "Gata",
@@ -745,10 +767,10 @@
 				how: "How to play",
 				back: "Back",
 				players: "Players",
-				setupSubtitle: "Choose the number of players, read the word then pass the phone. One player will be the impostor.",
+				setupSubtitle: "Choose the number of players, read the word then pass the phone. One of you will be the impostor.",
 				startRound: "Start round",
 				player: "Player",
-				restart: "Restart",
+				restart: "Back",
 				nextPlayerTap: "Tap to reveal the word",
 				tapPass: "Tap the screen and pass the phone to the next player",
 				doneTitle: "Done",
@@ -757,6 +779,13 @@
 				impostor: "Impostor"
 			}
 		};
+
+		function normalizeWordInput(s) {
+			s = (s || "").trim();
+			if (!s) return "";
+			s = s.replace(/\s+/g, " ");
+			return toTitleCase(s);
+		}
 
 		function t(key) {
 			return UI[LANG][key];
@@ -809,7 +838,10 @@
 
 		function startGame() {
 			N = clampPlayersValue(N || 5);
-			word = toTitleCase(pickWord());
+
+			const cw = normalizeWordInput(customWord);
+			word = cw ? cw : toTitleCase(pickWord());
+
 			impostorIndex = randInt(1, N);
 			currentPlayer = 1;
 			phase = "hide";
@@ -888,16 +920,15 @@
 			`;
 
 			document.getElementById("back").onclick = () => {
-				phase = "intro";
+				phase = "setup";
 				render();
 			};
 		}
 
-		function renderSetup() {
-				app.className = "screen";
-				app.innerHTML = `
+	function renderSetup() {
+			app.className = "screen";
+			app.innerHTML = `
 					<div class="wrap">
-
 						<div class="card">
 							<div class="brand">
 								<div class="logo"></div>
@@ -912,17 +943,25 @@
 
 									<div class="playerControl">
 										<button id="decPlayers" class="stepBtn" type="button" aria-label="Decrease players">−</button>
-
 										<div id="playersWrap"></div>
-
 										<button id="incPlayers" class="stepBtn" type="button" aria-label="Increase players">+</button>
 									</div>
 								</div>
 
+								<div style="width:100%; display:flex; justify-content:center; margin-top:10px;">
+									${useCustomWordUI
+								? `
+												<input id="customWordInput" class="wordInput" type="text" inputmode="text"
+													autocomplete="off" autocapitalize="words" spellcheck="false"
+													placeholder="${LANG === "ro" ? "Cuvânt (opțional)" : "Word (optional)"}"
+													value="${(customWord || "").replace(/"/g, "&quot;")}" />
+												`
+								: `<button id="customWordBtn" class="btn btn2">${LANG === "ro" ? "Cuvânt preferențial" : "Custom word"}</button>`
+							}
+								</div>
+
 								<button id="start" class="btn">${t("startRound")}</button>
 							</div>
-
-					
 						</div>
 
 						<div class="bottomControls">
@@ -939,24 +978,52 @@
 								</a>
 							</div>
 						</div>
-
 					</div>
 				`;
 
-				renderPlayersControl();
+			renderPlayersControl();
 
-				document.getElementById("decPlayers").onclick = () => setPlayers(-1);
-				document.getElementById("incPlayers").onclick = () => setPlayers(1);
+			document.getElementById("decPlayers").onclick = () => setPlayers(-1);
+			document.getElementById("incPlayers").onclick = () => setPlayers(1);
 
-				document.getElementById("start").onclick = () => startGame();
-				document.getElementById("how").onclick = () => { phase = "instructions"; render(); };
-				document.getElementById("lang").onclick = () => {
+			document.getElementById("start").onclick = () => startGame();
+			document.getElementById("how").onclick = () => { phase = "instructions"; render(); };
+
+			document.getElementById("lang").onclick = () => {
 				LANG = LANG === "ro" ? "en" : "ro";
 				renderSetup();
-		
 			};
 
-			}
+			const customBtn = document.getElementById("customWordBtn");
+		if (customBtn) {
+			customBtn.onclick = () => {
+				useCustomWordUI = true;
+				localStorage.setItem(STORAGE_CUSTOM_UI, "1");
+				renderSetup();
+				const input = document.getElementById("customWordInput");
+				if (input) input.focus();
+			};
+		}
+
+		const input = document.getElementById("customWordInput");
+		if (input) {
+			input.oninput = () => {
+				customWord = input.value;
+				localStorage.setItem(STORAGE_CUSTOM_WORD, customWord);
+			};
+			input.onkeydown = (e) => {
+				if (e.key === "Enter") startGame();
+				if (e.key === "Escape") {
+					useCustomWordUI = false;
+					customWord = "";
+					localStorage.removeItem(STORAGE_CUSTOM_WORD);
+					localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+					renderSetup();
+				}
+			};
+		}
+
+		}
 
 		function renderTopbar() {
 			return `
@@ -1031,8 +1098,23 @@
 				</div>
 			`;
 
-			document.getElementById("again").onclick = () => startGame();
-			document.getElementById("back").onclick = () => { phase = "setup"; render(); };
+			document.getElementById("again").onclick = () => {
+				useCustomWordUI = false;
+				customWord = "";
+				localStorage.removeItem(STORAGE_CUSTOM_WORD);
+				localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+				startGame();
+			};
+
+			document.getElementById("back").onclick = () => {
+				useCustomWordUI = false;
+				customWord = "";
+				localStorage.removeItem(STORAGE_CUSTOM_WORD);
+				localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+				phase = "setup";
+				render();
+			};
+
 		}
 
 		function render() {
