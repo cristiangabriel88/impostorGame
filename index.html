@@ -401,6 +401,23 @@
 		.tapArea { width: 100%; cursor: pointer; touch-action: manipulation;}
 		.tapArea .card { cursor: pointer; }
 
+		.passOverlay {
+			position: fixed;
+			inset: 0;
+			background: #000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+			color: #fff;
+			font-size: clamp(48px, 10vw, 96px);
+			font-weight: 950;
+			letter-spacing: 0.4em;
+			user-select: none;
+			pointer-events: all;
+		}
+
+
 	</style>
 </head>
 
@@ -1119,6 +1136,20 @@
 
 		}
 
+		function showPassOverlayAndAdvance() {
+				const overlay = document.createElement("div");
+				overlay.className = "passOverlay";
+				overlay.textContent = "PASS";
+
+				document.body.appendChild(overlay);
+
+				setTimeout(() => {
+					overlay.remove();
+					nextPhase();
+				}, 3000);
+			}
+
+
 		function render() {
 			if (phase === "intro") return renderIntro();
 			if (phase === "instructions") return renderInstructions();
@@ -1147,8 +1178,15 @@
 			const now = Date.now();
 			if (now - lastTap < 250) return;
 			lastTap = now;
+
+			if (phase === "reveal") {
+				showPassOverlayAndAdvance();
+				return;
+			}
+
 			nextPhase();
 		}
+
 
 		render();
 	</script>
