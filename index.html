@@ -38,6 +38,7 @@
 				radial-gradient(900px 700px at 50% 90%, rgba(255, 77, 109, .12), transparent 60%),
 				linear-gradient(180deg, var(--bg0), var(--bg1));
 			overflow: hidden;
+			touch-action: manipulation;
 		}
 
 		.screen {
@@ -71,6 +72,25 @@
 			gap: 10px;
 			margin-bottom: 10px;
 		}
+
+		.kofiWrap {
+			margin-top: 28px;
+			display: flex;
+			justify-content: center;
+			opacity: 0.85;
+			transition: opacity .2s ease, transform .2s ease;
+		}
+
+		.kofiWrap:hover {
+			opacity: 1;
+			transform: translateY(-1px);
+		}
+
+		.kofiWrap img {
+			height: 40px;
+			border: 0;
+		}
+
 
 		.logo {
 			width: 14px;
@@ -423,7 +443,7 @@
 			const WORDS_EN = [
 					// objects
 					"table", "chair", "wardrobe", "mirror", "key", "phone", "laptop", "television", "flashlight", "watch",
-					"pen", "book", "fountain pen", "backpack", "umbrella", "pillow", "blanket", "fridge", "stove", "oven",
+					"pen", "book", "fountain pen", "umbrella", "pillow", "blanket", "fridge", "stove", "oven",
 					"plate", "glass", "spoon", "fork", "knife", "frying pan", "pot", "kettle", "mug", "bottle",
 
 					// nature
@@ -530,7 +550,7 @@
 
 				// home & rooms
 				"kitchen", "bathroom", "bedroom", "living room", "balcony", "garage", "hallway", "stairs", "elevator", "attic",
-				"basement", "window", "curtain", "door", "handle", "lock", "carpet", "shelf", "drawer", "mirror",
+				"basement", "window", "curtain", "door", "handle", "lock", "carpet", "shelf", "drawer",
 
 				// nature & outdoors
 				"valley", "cliff", "cave", "trail", "summit", "waterfall", "stream", "pond", "shore", "coast",
@@ -589,7 +609,7 @@
 
 		const INSTRUCTIONS_RO = [
 			"Toți jucătorii primesc același cuvânt… mai puțin unul.",
-			"Un jucător este IMPOSTORUL și vede doar acest rol.",
+			"Acesta se va preface că știe și el cuvântul.",
 			"Pe rând, fiecare spune UN CUVÂNT legat de subiect.",
 			"Nu fi prea evident – impostorul ascultă atent 👀",
 			"După 3 runde, discutați și votați cine este impostorul.",
@@ -599,7 +619,7 @@
 
 		const INSTRUCTIONS_EN = [
 			"All players see the same word… except one.",
-			"One player is the IMPOSTOR and sees only this role.",
+			"That player will pretend to know the word as well.",
 			"Each round, everyone says ONE word related to the topic.",
 			"Don’t be too obvious – the impostor is listening 👀",
 			"After 3 rounds, discuss and vote the impostor.",
@@ -618,11 +638,11 @@
 				back: "Înapoi",
 				players: "Jucători",
 				setupSubtitle: "Alege numărul de jucători, apoi trece telefonul pe rând. Un singur jucător va vedea IMPOSTOR.",
-				setupHint: "După ce începi, telefonul se dă jucătorului 1. Ecranul negru ascunde cuvântul între jucători.",
+				setupHint: "Ecranul negru ascunde cuvântul între jucători.",
 				startRound: "Începe runda",
 				player: "Jucător",
 				restart: "Repornește",
-				nextPlayerTap: "Următorul jucător: apasă pentru a vedea",
+				nextPlayerTap: "Apasă pentru a vedea cuvântul",
 				tapPass: "Apasă ecranul și dă telefonul următorului jucător",
 				doneTitle: "Gata",
 				newRound: "Rundă nouă",
@@ -637,11 +657,11 @@
 				back: "Back",
 				players: "Players",
 				setupSubtitle: "Choose the number of players, then pass the phone around. One player will see IMPOSTOR.",
-				setupHint: "After starting, give the phone to player 1. The black screen hides the word between players.",
+				setupHint: "The black screen hides the word between players.",
 				startRound: "Start round",
 				player: "Player",
 				restart: "Restart",
-				nextPlayerTap: "Next player: tap to reveal",
+				nextPlayerTap: "Tap to reveal the word",
 				tapPass: "Tap the screen and pass the phone to the next player",
 				doneTitle: "Done",
 				newRound: "New round",
@@ -666,9 +686,23 @@
 			return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
 
+		let lastWord = "";
+
 		function pickWord() {
 			const list = LANG === "ro" ? WORDS_RO : WORDS_EN;
-			return list[randInt(0, list.length - 1)];
+			if (!list.length) return "";
+
+			let w = list[randInt(0, list.length - 1)];
+			if (list.length === 1) return w;
+
+			let tries = 0;
+			while (w === lastWord && tries < 20) {
+				w = list[randInt(0, list.length - 1)];
+				tries++;
+			}
+
+			lastWord = w;
+			return w;
 		}
 
 		function clampPlayers(v) {
@@ -681,6 +715,7 @@
 		function toTitleCase(s) {
 			s = (s || "").trim();
 			if (!s) return s;
+			if (s.includes(" ")) return s;
 			return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 		}
 
@@ -744,15 +779,11 @@
 						<div class="title">${t("how")}</div>
 
 						<ul style="text-align:left; margin-top:16px; line-height:1.6;">
-							${list.map(i => `<li>• ${i}</li>`).join("")}
+							${list.map(i => `<li>${i}</li>`).join("")}
 						</ul>
 
 						<div class="row" style="margin-top:20px">
 							<button id="back" class="btn btn2">${t("back")}</button>
-						</div>
-
-						<div class="row">
-							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
 						</div>
 					</div>
 				</div>
@@ -778,6 +809,7 @@
 							<div class="logo"></div>
 							<div class="title">${t("title")}</div>
 						</div>
+
 						<p class="subtitle">${t("setupSubtitle")}</p>
 
 						<div class="row">
@@ -795,8 +827,15 @@
 							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
 						</div>
 					</div>
+
+					<div class="kofiWrap">
+						<a href="https://ko-fi.com/cristian_gabriel/?amount=5" target="_blank" rel="noopener noreferrer">
+							<img src="https://storage.ko-fi.com/cdn/kofi5.png" alt="Buy Me a Coffee" />
+						</a>
+					</div>
 				</div>
 			`;
+
 
 			document.getElementById("start").onclick = () => startGame();
 			document.getElementById("how").onclick = () => { phase = "instructions"; render(); };
@@ -880,17 +919,12 @@
 							<button id="back" class="btn btn2">${t("back")}</button>
 						</div>
 						<div class="hint">${t("goodLuck")}</div>
-
-						<div class="row">
-							<button id="lang" class="btn btn2">${LANG === "ro" ? "EN" : "RO"}</button>
-						</div>
 					</div>
 				</div>
 			`;
 
 			document.getElementById("again").onclick = () => startGame();
 			document.getElementById("back").onclick = () => { phase = "setup"; render(); };
-			document.getElementById("lang").onclick = () => { LANG = LANG === "ro" ? "en" : "ro"; renderDone(); };
 		}
 
 		function render() {
@@ -924,13 +958,12 @@
 			nextPhase();
 		}
 
-		document.addEventListener("click", (e) => {
+		document.addEventListener("pointerup", (e) => {
+			if (e.target && e.target.closest && e.target.closest(".topbar")) return;
 			if (phase === "hide" || phase === "reveal") guardedTap();
 		});
 
-		document.addEventListener("touchend", (e) => {
-			if (phase === "hide" || phase === "reveal") guardedTap();
-		}, { passive: true });
+
 
 		render();
 	</script>
