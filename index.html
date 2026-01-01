@@ -1184,17 +1184,13 @@
 
 			const randBtn = document.getElementById("randomWordBtn");
 			if (randBtn && input) {
-				const stopFocus = (e) => {
-					e.preventDefault();
+				const stop = (e) => {
 					e.stopPropagation();
 				};
 
-				randBtn.addEventListener("pointerdown", stopFocus, { passive: false });
-				randBtn.addEventListener("touchstart", stopFocus, { passive: false });
-				randBtn.addEventListener("mousedown", stopFocus);
-
-				randBtn.addEventListener("click", (e) => {
-					stopFocus(e);
+				const run = (e) => {
+					e.preventDefault();
+					e.stopPropagation();
 
 					const w = toTitleCase(pickWord());
 					input.value = w;
@@ -1202,7 +1198,13 @@
 					localStorage.setItem(STORAGE_CUSTOM_WORD, customWord);
 
 					input.blur();
-				});
+				};
+
+				randBtn.addEventListener("pointerdown", stop, { passive: true });
+				randBtn.addEventListener("pointerup", run, { passive: false });
+
+				randBtn.addEventListener("touchstart", stop, { passive: true });
+				randBtn.addEventListener("touchend", run, { passive: false });
 			}
 
 			if (input) {
