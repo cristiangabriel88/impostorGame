@@ -498,28 +498,38 @@
 			text-decoration: none;
 			z-index: 20;
 			padding: 10px;
-			animation: markPulse 4s ease-in-out infinite;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity .2s ease;
 		}
 
-
-		#creatorMark.show {
-			opacity: .6;
+		#creatorMark.visible {
+			opacity: .65;
 			pointer-events: auto;
+			animation: markPulseFast 2.2s ease-in-out infinite;
 		}
 
 		#creatorMark:active {
 			opacity: 1;
 		}
 
-		@keyframes markPulse {
-
-			0%,
-			100% {
-				text-shadow: 0 0 0 rgba(124, 92, 255, 0);
+		@keyframes markPulseFast {
+			0% {
+				text-shadow:
+					0 0 6px rgba(124, 92, 255, .15),
+					0 0 10px rgba(33, 212, 253, .08);
 			}
 
 			50% {
-				text-shadow: 0 0 12px rgba(124, 92, 255, .45);
+				text-shadow:
+					0 0 18px rgba(124, 92, 255, .55),
+					0 0 32px rgba(33, 212, 253, .25);
+			}
+
+			100% {
+				text-shadow:
+					0 0 6px rgba(124, 92, 255, .15),
+					0 0 10px rgba(33, 212, 253, .08);
 			}
 		}
 	</style>
@@ -912,6 +922,14 @@
 			}
 		};
 
+		function updateCreatorMark() {
+			const mark = document.getElementById("creatorMark");
+			if (!mark) return;
+			mark.classList.toggle("visible", phase === "setup");
+		}
+
+
+
 		function normalizeWordInput(s) {
 			s = (s || "").trim();
 			if (!s) return "";
@@ -1075,6 +1093,12 @@
 		}
 
 		function renderSetup() {
+			customWord = "";
+			localStorage.removeItem(STORAGE_CUSTOM_WORD);
+
+			useCustomWordUI = false;
+			localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+
 			app.className = "screen";
 			app.innerHTML = `
 					<div class="wrap">
@@ -1186,6 +1210,8 @@
 					}
 				};
 			}
+
+			updateCreatorMark();
 
 		}
 
@@ -1321,13 +1347,16 @@
 
 
 		function render() {
-			if (phase === "intro") return renderIntro();
-			if (phase === "instructions") return renderInstructions();
-			if (phase === "setup") return renderSetup();
-			if (phase === "hide") return renderHide();
-			if (phase === "reveal") return renderReveal();
-			if (phase === "done") return renderDone();
+			if (phase === "intro") renderIntro();
+			else if (phase === "instructions") renderInstructions();
+			else if (phase === "setup") renderSetup();
+			else if (phase === "hide") renderHide();
+			else if (phase === "reveal") renderReveal();
+			else if (phase === "done") renderDone();
+
+			updateCreatorMark();
 		}
+
 
 		function nextPhase() {
 			if (phase === "hide") {
@@ -1357,10 +1386,12 @@
 			nextPhase();
 		}
 
-		render();
+		window.addEventListener("DOMContentLoaded", () => {
+			render();
+		});
 	</script>
 
-	<a id="creatorMark" href="https://cristiangabriel.dev" target="_blank" rel="noopener noreferrer">◐</a>
+	<a id="creatorMark" href="https://cristiangabriel.dev" target="_blank" rel="noopener noreferrer">∘⊙∘</a>
 
 </body>
 
