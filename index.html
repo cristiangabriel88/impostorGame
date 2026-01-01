@@ -1,0 +1,1195 @@
+<!doctype html>
+<html lang="ro">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<title>Impostor</title>
+
+	<style>
+		:root {
+			--bg0: #070A12;
+			--bg1: #0B1020;
+			--card: rgba(255, 255, 255, .06);
+			--card2: rgba(255, 255, 255, .09);
+			--stroke: rgba(255, 255, 255, .10);
+			--text: rgba(255, 255, 255, .92);
+			--muted: rgba(255, 255, 255, .66);
+			--accent: #7C5CFF;
+			--accent2: #21D4FD;
+			--danger: #FF4D6D;
+			--shadow: 0 18px 60px rgba(0, 0, 0, .55);
+			--radius: 22px;
+		}
+
+		* {
+			box-sizing: border-box;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+			color: var(--text);
+			background: radial-gradient(1200px 900px at 20% 10%, rgba(124, 92, 255, .25), transparent 55%),
+				radial-gradient(900px 700px at 80% 20%, rgba(33, 212, 253, .18), transparent 55%),
+				radial-gradient(900px 700px at 50% 90%, rgba(255, 77, 109, .12), transparent 60%),
+				linear-gradient(180deg, var(--bg0), var(--bg1));
+			overflow: hidden;
+			touch-action: manipulation;
+		}
+
+		.screen {
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			text-align: center;
+			user-select: none;
+		}
+
+		.wrap {
+			width: min(560px, 100%);
+		}
+
+		.card {
+			position: relative;
+			background: linear-gradient(180deg, var(--card), rgba(255, 255, 255, .035));
+			border: 1px solid var(--stroke);
+			border-radius: var(--radius);
+			box-shadow: var(--shadow);
+			padding: 26px 20px;
+			backdrop-filter: blur(10px);
+		}
+
+		.brand {
+			display: flex;
+			align-items: baseline;
+			justify-content: center;
+			gap: 10px;
+			margin-bottom: 10px;
+		}
+
+		.logo {
+			transform: translateY(-6px);
+		}
+
+		.kofiWrap {
+			margin-top: 20px;
+			display: flex;
+			justify-content: center;
+			opacity: 0.85;
+			transition: opacity .2s ease, transform .2s ease;
+		}
+
+		.kofiWrap:hover {
+			opacity: 1;
+			transform: translateY(-1px);
+		}
+
+		.kofiWrap img {
+			height: 40px;
+			border: 0;
+		}
+
+
+		.logo {
+			width: 14px;
+			height: 14px;
+			border-radius: 999px;
+			background: radial-gradient(circle at 30% 30%, #fff, rgba(255, 255, 255, .15) 35%, transparent 60%),
+				linear-gradient(135deg, var(--accent), var(--accent2));
+			box-shadow: 0 0 0 4px rgba(124, 92, 255, .18), 0 12px 30px rgba(124, 92, 255, .18);
+		}
+
+		.title {
+			font-size: 38px;
+			font-weight: 850;
+			letter-spacing: .3px;
+			margin: 4px 0 2px;
+		}
+
+		.subtitle {
+			color: var(--muted);
+			font-size: 15px;
+			margin: 0 0 18px;
+			line-height: 1.35;
+		}
+
+		.row {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+			justify-content: center;
+			flex-wrap: wrap;
+			margin-top: 10px;
+		}
+
+		.field {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 12px 14px;
+			background: linear-gradient(180deg, rgba(255, 255, 255, .085), rgba(255, 255, 255, .04));
+			border: 1px solid rgba(255, 255, 255, .10);
+			border-radius: 18px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+		}
+
+		.field label {
+			font-size: 14px;
+			color: var(--muted);
+		}
+
+		input[type="number"] {
+			width: 90px;
+			border: 0;
+			outline: 0;
+			padding: 6px 8px;
+			font-size: 22px;
+			font-weight: 800;
+			color: var(--text);
+			background: transparent;
+			text-align: center;
+			appearance: textfield;
+		}
+
+		input[type="number"]::-webkit-outer-spin-button,
+		input[type="number"]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		.btn {
+			border: 0;
+			cursor: pointer;
+			margin-top: 10px;
+			padding: 14px 18px;
+			border-radius: 18px;
+			font-size: 16px;
+			font-weight: 850;
+			letter-spacing: .2px;
+			color: #0b0f1c;
+			background: linear-gradient(135deg, var(--accent), var(--accent2));
+			box-shadow: 0 14px 40px rgba(33, 212, 253, .18), 0 16px 50px rgba(124, 92, 255, .16);
+			transform: translateY(0);
+			transition: transform .12s ease, filter .12s ease;
+			min-width: 160px;
+		}
+
+		.bottomControls {
+			margin-top: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.topRow {
+			display: flex;
+			gap: 12px;
+		}
+
+		.btn:active {
+			transform: translateY(1px);
+			filter: brightness(.95);
+		}
+
+		.hint {
+			margin-top: 14px;
+			color: var(--muted);
+			font-size: 14px;
+			line-height: 1.4;
+		}
+
+		.topbar {
+			position: fixed;
+			top: 14px;
+			left: 14px;
+			right: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			pointer-events: none;
+			font-size: 13px;
+			color: rgba(255, 255, 255, .68);
+		}
+
+		.pill {
+			pointer-events: none;
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: rgba(0, 0, 0, .25);
+			backdrop-filter: blur(8px);
+		}
+
+		.link {
+			pointer-events: auto;
+			cursor: pointer;
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: rgba(0, 0, 0, .25);
+			backdrop-filter: blur(8px);
+			text-decoration: none;
+			color: rgba(255, 255, 255, .82);
+		}
+
+		.link:active {
+			filter: brightness(.95);
+		}
+
+		.big {
+			font-size: clamp(44px, 7vw, 70px);
+			font-weight: 950;
+			letter-spacing: .6px;
+			margin: 4px 0 0;
+		}
+
+		.word {
+			background: linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .62));
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			text-shadow: 0 18px 60px rgba(0, 0, 0, .35);
+		}
+
+		.sub {
+			margin-top: 12px;
+			font-size: 15px;
+			color: rgba(255, 255, 255, .72);
+		}
+
+		.tapArea {
+			width: 100%;
+		}
+
+		.blackout {
+			background: #000;
+		}
+
+		.blackout .pill,
+		.blackout .link {
+			background: rgba(255, 255, 255, .08);
+			border-color: rgba(255, 255, 255, .14);
+			color: rgba(255, 255, 255, .90);
+		}
+
+		.blackout .card {
+			background: rgba(255, 255, 255, .05);
+			border-color: rgba(255, 255, 255, .10);
+		}
+
+		.doneGrid {
+			display: flex;
+			gap: 12px;
+			justify-content: center;
+			flex-wrap: wrap;
+			margin-top: 16px;
+		}
+
+		.btn2 {
+			border: 1px solid rgba(255, 255, 255, .14);
+			background: rgba(255, 255, 255, .06);
+			color: rgba(255, 255, 255, .9);
+			box-shadow: none;
+			min-width: 160px;
+		}
+
+		ul {
+			list-style: none;
+			padding-left: 0;
+		}
+
+		li {
+			display: flex;
+			align-items: flex-start;
+			gap: 10px;
+			line-height: 1.6;
+		}
+
+		li::before {
+			content: "•";
+			margin-top: 0.1em;
+			color: currentColor;
+		}
+
+		.flagBtn{
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			padding: 12px 16px;
+			min-width: 64px;
+		}
+
+		.flagImg{
+			width: 28px;
+			height: 20px;
+			object-fit: contain;
+			display:block;
+		}
+
+		.playerControl{
+		display:flex;
+		align-items:center;
+		gap:10px;
+		}
+
+		.stepBtn{
+			width:44px;
+			height:44px;
+			border-radius:14px;
+			border: 1px solid rgba(255,255,255,.14);
+			background: rgba(255,255,255,.06);
+			color: rgba(255,255,255,.92);
+			font-size: 22px;
+			font-weight: 900;
+			cursor:pointer;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+		}
+
+		.stepBtn:active{
+			filter: brightness(.95);
+			transform: translateY(1px);
+		}
+
+		.playerValue{
+			min-width: 56px;
+			text-align:center;
+			font-size: 22px;
+			font-weight: 900;
+		}
+
+		.playerSelect{
+			border: 0;
+			outline: 0;
+			background: transparent;
+			color: var(--text);
+			font-size: 20px;
+			font-weight: 850;
+			padding: 6px 8px;
+			appearance: auto;
+		}
+
+		.playerSelect option{
+			color: #111;
+		}
+
+			.wordInput{
+			width: 240px;
+			max-width: 70vw;
+			border: 1px solid rgba(255,255,255,.14);
+			border-radius: 16px;
+			background: rgba(255,255,255,.06);
+			color: var(--text);
+			padding: 12px 14px;
+			font-size: 16px;
+			font-weight: 750;
+			outline: none;
+		}
+		.wordInput::placeholder{
+			color: rgba(255,255,255,.55);
+		}
+
+		.tapArea { width: 100%; cursor: pointer; touch-action: manipulation;}
+		.tapArea .card { cursor: pointer; }
+
+		.passOverlay {
+			position: fixed;
+			inset: 0;
+			background: #000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+			color: #fff;
+			font-size: clamp(48px, 10vw, 96px);
+			font-weight: 950;
+			letter-spacing: 0.4em;
+			user-select: none;
+			pointer-events: all;
+		}
+
+
+	</style>
+</head>
+
+<body>
+	<div id="app" class="screen"></div>
+
+	<script>
+
+		const WORDS_RO = [
+				// obiecte
+			"masă", "scaun", "dulap", "oglindă", "cheie", "telefon", "laptop", "televizor", "lanternă", "ceas",
+			"pix", "carte", "stilou", "rucsac", "umbrelă", "pernă", "pătură", "frigider", "aragaz", "cuptor",
+			"farfurie", "pahar", "lingură", "furculiță", "cuțit", "tigaie", "oală", "ibric", "cană", "sticlă",
+
+			// natură
+			"pădure", "munte", "râu", "mare", "lac", "insulă", "plajă", "deșert", "câmpie", "deal",
+			"floare", "copac", "frunză", "rădăcină", "iarbă", "nisip", "piatră", "stâncă", "nor", "ploaie",
+			"furtună", "zăpadă", "soare", "lună", "stea", "cer", "curcubeu", "vulcan", "gheață", "val",
+
+			// animale
+			"câine", "pisică", "cal", "vacă", "oaie", "capră", "porc", "iepure", "urs", "lup",
+			"vulpe", "leu", "tigru", "elefant", "girafă", "zebră", "șarpe", "broască", "pește", "delfin",
+			"balenă", "rechin", "vultur", "bufniță", "porumbel", "rândunică", "pinguin", "fluture", "albine", "păianjen",
+
+			// mâncare
+			"pâine", "brânză", "lapte", "ou", "unt", "miere", "zahăr", "sare", "piper", "orez",
+			"paste", "cartof", "morcov", "ceapă", "usturoi", "roșie", "castravete", "ardei", "varză", "salată",
+			"măr", "pară", "banană", "portocală", "lămâie", "căpșună", "pepene", "strugure", "prună", "cireașă",
+
+			// oameni & acțiuni
+			"prieten", "familie", "copil", "părinte", "profesor", "medic", "dentist", "inginer", "șofer", "artist",
+			"cântăreț", "actor", "scriitor", "pictor", "fotograf", "sportiv", "dansator", "bucătar", "jucător", "lider",
+
+			// locuri
+			"oraș", "sat", "casă", "bloc", "apartament", "birou", "școală", "liceu", "universitate", "bibliotecă",
+			"spital", "farmacie", "magazin", "piață", "restaurant", "cafenea", "parc", "stadion", "gară", "aeroport",
+
+			// transport
+			"mașină", "autobuz", "tramvai", "metrou", "tren", "avion", "elicopter", "bicicletă", "motocicletă", "vapor",
+			"barcă", "submarin", "rachetă", "taxi", "trotinetă",
+
+			// abstract / diverse
+			"timp", "liniște", "zgomot", "viteză", "căldură", "frig", "lumină", "umbră", "energie", "putere",
+			"curaj", "frică", "bucurie", "tristețe", "speranță", "răbdare", "noroc", "pace", "haos", "ordine",
+
+			// românesc specific
+			"mămăligă", "sarmale", "cozonac", "ciorbă", "zacuscă", "mititei", "bulz", "tocăniță", "friptură", "papanași",
+			"pălincă", "țuică", "vișinată", "afinată", "brânză", "telemea", "cașcaval", "smântână", "iaurt", "jumări",
+
+
+			"ie", "cătrință", "opincă", "brâu", "măramă", "căciulă", "cojoc", "sumar", "chimire", "itari",
+
+			"doină", "horă", "sârbă", "căluș", "lăutari", "fluier", "cobză", "taragot", "vioară", "tobă",
+
+			"colindă", "plugușor", "sorcovă", "mărțișor", "capră", "ursul", "călușari", "colac", "bucium", "clopot",
+
+			"stână", "cioban", "mioară", "turmă", "transhumanță", "baci", "fluier", "băț", "căciulă", "cojoc",
+
+			"prispă", "casă", "șură", "fânar", "coteț", "fântână", "poartă", "gard", "uliță", "prispă",
+
+			"deal", "codru", "poiană", "padiș", "crâng", "luncă", "șes", "pajiște", "munțișor", "izvor",
+
+			"sobă", "plită", "ceaun", "vatră", "lingurar", "donită", "putină", "polonic", "blid", "străchină",
+
+			"târg", "bâlci", "iarmaroc", "piețe", "han", "cârciumă", "crâșmă", "birt", "tavernă", "popas",
+
+			"vorbă", "grai", "accent", "zicală", "proverb", "poveste", "basm", "legendă", "snoavă", "ghicitoare",
+
+			"moș", "babă", "nepot", "fiu", "fiică", "unchi", "mătușă", "verișor", "cumnat", "socru",
+
+			"noroc", "ghinion", "soartă", "haz", "spirit", "fire", "răbdare", "dor", "jale", "bucurie",
+
+			"drum", "potecă", "răscruce", "hotar", "moșie", "ogor", "țarină", "holdă", "arătură", "semănat",
+
+			"paznic", "jandarm", "primar", "învățător", "preot", "dascăl", "călugăr", "stareț", "egumen", "paroh",
+
+			"biserică", "mănăstire", "schit", "troiță", "icoană", "altar", "clopotniță", "catapeteasmă", "lumânare", "tămâie",
+
+			"cetate", "curte", "boier", "voievod", "domnitor", "haiduc", "pandur", "steag", "sabie", "spadă",
+
+
+			// funny / playful
+			"moft", "bufon", "năzdrăvan", "ghiduș", "zbânghiu", "aiurit", "zăpăcit", "trăznit", "bleg",
+			"gogoman", "tâmpit", "zurlu", "cașcaval", "burtos", "pufos", "mototol", "ciufulit", "boscorodit", "harababură",
+
+			"bambus", "gogoașă", "clătită", "gogoși", "plăcintă", "chiflă", "covrig", "foietaj", "pufarină", "pateu",
+
+			"ciorăpel", "papuc", "șlapi", "pijamă", "halat", "chiloți", "șosetă", "bască", "șapcă", "pălăriuță",
+
+			"gargară", "bâlbâială", "bolboroseală", "mormăială", "fâsâit", "pocnitură", "bubuitură", "zdrăngăneală", "hârâit", "zgomotel",
+
+			"pisălog", "bârfitor", "morocănos", "bombănitor", "sucit", "pizmă", "fițos", "figuri", "mofturos", "tăcănit",
+
+			"burtică", "năsuc", "ochișor", "mânuță", "picioruș", "funduleț", "urechiușă", "botic", "mustațioară", "bărbiță",
+
+			"ciuf", "moț", "cocoș", "pui", "găină", "gâscă", "rățoi", "curcan", "porumbel", "cioară",
+
+			"claxon", "trompetă", "sirenă", "fluier", "tobă", "poc", "bang", "zbang", "buf", "trosc",
+
+			"teleleu", "aiurea", "anapoda", "varză", "tălmăș-bălmăș", "harcea-parcea", "bulibășeală", "zăpăceală", "încurcătură", "balamuc",
+
+			"joacă", "ghidușie", "păcăleală", "șmecherie", "prostioară", "năzbâtie", "poznă", "glumă", "farsă", "picanterie",
+
+
+				// random interesting romanian
+			"amnar", "briceag", "căldăruș", "cazane", "talaz", "hamac", "felinar", "zbor", "ecou", "oglindire",
+			"pumn", "cot", "genunchi", "umeri", "ceafă", "încheietură", "talpă", "degetar", "unghieră", "pernă",
+			"alunecare", "scânteie", "clipă", "puls", "freamăt", "tresărire", "vibrație", "ecart", "spirală", "undă",
+			"colind", "taină", "tainic", "vestitor", "pribeag", "rătăcitor", "călător", "popas", "chemare", "hotar",
+			"busuioc", "pelin", "lavandă", "mac", "sunătoare", "cimbru", "isop", "mentă", "rozmarin", "salvie",
+			"amurg", "zor", "miez", "umbră", "lucire", "sclipire", "tremur", "foșnet", "șoaptă", "susur",
+			"atelier", "manuscris", "copertă", "siglă", "emblemă", "insignă", "medalie", "trofeu", "plachetă", "diplomă",
+			"plută", "cârmă", "ancoră", "cârlig", "pânză", "catarg", "corabie", "galeră", "vâslă", "sfoară",
+			"abur", "fum", "cenușă", "jar", "văpaie", "scorie", "magmă", "lavă", "crater", "tuf",
+			"cristal", "reflex", "spectru", "prismă", "lentilă", "filtru", "diafragmă", "focus", "claritate", "distorsiune",
+			"radar", "sonar", "semnal", "impuls", "frecvență", "interferență", "latență", "releu", "conductor", "izolator",
+			"zodie", "horoscop", "astrolab", "talisman", "amuletă", "vrajă", "descântec", "ritual", "simbol", "semn",
+			"busolă", "meridian", "paralelă", "azimut", "altitudine", "latitudine", "orizont", "zenit", "nadir", "echinocțiu",
+			"tipar", "gravură", "relief", "textură", "patină", "nuanță", "pigment", "contrast", "ton", "umbrire",
+			"pavilion", "arcadă", "colonadă", "fronton", "cupolă", "balustradă", "scară", "pasarelă", "belvedere", "loggie",
+			"fragil", "elastic", "dens", "poros", "mat", "lucios", "opac", "transparent", "fluid", "solid",
+			"miraj", "iluzie", "paradox", "ecou", "abis", "vertij", "enigmă", "mister", "labirint", "portal",
+
+
+			"far", "busolă", "catarg", "binoclu", "hartă", "pergament", "sigiliu", "amforă", "clepsidră", "candelabru",
+			"bumerang", "harpon", "cătușe", "armură", "coif", "spadă", "pumnal", "scut", "arc", "săgeată",
+			"carusel", "labirint", "sirenă", "pirat", "viking", "samurai", "gladiator", "magician", "alchimist", "astronaut",
+			"templu", "cetate", "castel", "palat", "catacombă", "ruină", "turn", "pod", "tunel", "cavernă",
+			"observator", "far", "planetariu", "bibliotecă", "muzeu", "teatru", "cinema", "atelier", "laborator", "seră",
+			"vulcan", "gheizer", "canion", "deltă", "fiord", "junglă", "savană", "taiga", "arhipelag", "recif",
+			"tornadă", "furtună", "uragan", "viscol", "ceață", "auroră", "eclipsă", "meteor", "cometă", "constelație",
+			"corb", "bufniță", "vultur", "șoim", "liliac", "dihor", "vidră", "căprioară", "mistreț", "arici",
+			"delfin", "caracatiță", "meduză", "calamar", "rechin", "balenă", "hipocamp", "piranha", "manta",
+			"tramvai", "metrou", "telecabină", "teleferic", "dirijabil", "hidroavion", "submarin", "drezină", "trotinetă", "motocicletă",
+			"paletă", "șah", "poker", "zar", "darts", "biliard", "pingpong", "skateboard", "parașută", "scafandru",
+			"espressor", "mojar", "tel", "răzătoare", "tavă", "strecurătoare", "polonic", "tocător", "borcan", "termos",
+			"cafea", "cacao", "scorțișoară", "vanilie", "ghimbir", "cuișoare", "chimen", "coriandru", "busuioc", "rozmarin",
+			"tiramisu", "clătită", "gogoși", "cozonac", "sarmale", "ciorbă", "mămăligă", "tocăniță", "friptură", "salată",
+			"tâmplar", "fierar", "ceasornicar", "bijutier", "arhitect", "pilot", "navigator", "detectiv", "paramedic", "pompier",
+			"fotograf", "regizor", "sculptor", "pictor", "actor", "dansator", "dirijor", "violonist", "chitarist", "tobar",
+			"parolă", "criptare", "server", "router", "firewall", "aplicație", "browser", "cursor", "tastatură", "monitor",
+			"oglindă", "lanternă", "lupă", "magnet", "baterie", "siguranță", "comutator", "întrerupător", "priză", "cablu",
+			"caligrafie", "origami", "mandală", "graffiti", "colaj", "acuarelă", "pânză", "șevalet", "pensulă", "ceramică",
+			"tramvai", "felinar", "bulevard", "piațetă", "pasaj", "esplanadă", "promenadă", "faleză", "chei", "port",
+			"legendă", "mit", "enigmă", "blestem", "comoară", "hârtie", "jurnal", "scrisoare", "mesaj", "cod"
+
+			];
+
+		const WORDS_EN = [
+					// objects
+					"table", "chair", "wardrobe", "mirror", "key", "phone", "laptop", "television", "flashlight", "watch",
+					"pen", "book", "fountain pen", "umbrella", "pillow", "blanket", "fridge", "stove", "oven",
+					"plate", "glass", "spoon", "fork", "knife", "frying pan", "pot", "kettle", "mug", "bottle",
+
+					// nature
+					"forest", "mountain", "river", "sea", "lake", "island", "beach", "desert", "plain", "hill",
+					"flower", "tree", "leaf", "root", "grass", "sand", "stone", "rock", "cloud", "rain",
+					"storm", "snow", "sun", "moon", "star", "sky", "rainbow", "volcano", "ice", "wave",
+
+					// animals
+					"dog", "cat", "horse", "cow", "sheep", "goat", "pig", "rabbit", "bear", "wolf",
+					"fox", "lion", "tiger", "elephant", "giraffe", "zebra", "snake", "frog", "fish", "dolphin",
+					"whale", "shark", "eagle", "owl", "pigeon", "swallow", "penguin", "butterfly", "bees", "spider",
+
+					// food
+					"bread", "cheese", "milk", "egg", "butter", "honey", "sugar", "salt", "pepper", "rice",
+					"pasta", "potato", "carrot", "onion", "garlic", "tomato", "cucumber", "pepper", "cabbage", "salad",
+					"apple", "pear", "banana", "orange", "lemon", "strawberry", "watermelon", "grape", "plum", "cherry",
+
+					// people & roles
+					"friend", "family", "child", "parent", "teacher", "doctor", "dentist", "engineer", "driver", "artist",
+					"singer", "actor", "writer", "painter", "photographer", "athlete", "dancer", "cook", "player", "leader",
+
+					// places
+					"city", "village", "house", "apartment block", "apartment", "office", "school", "university", "library",
+					"hospital", "pharmacy", "shop", "market", "restaurant", "cafe", "park", "stadium", "train station", "airport",
+
+					// transport
+					"car", "bus", "tram", "subway", "train", "airplane", "helicopter", "bicycle", "motorcycle", "ship",
+					"boat", "submarine", "rocket", "taxi", "scooter",
+
+					// abstract / general
+					"time", "silence", "noise", "speed", "heat", "cold", "light", "shadow", "energy", "power",
+					"courage", "fear", "joy", "sadness", "hope", "patience", "luck", "peace", "chaos", "order",
+
+					// rural life
+					"sheepfold", "shepherd", "herd", "transhumance", "flute", "stick",
+
+					// village structures
+					"porch", "house", "barn", "hayloft", "chicken coop", "well", "gate", "fence", "lane", "porch",
+
+					// landscapes
+					"hill", "clearing", "karst plateau", "grove", "meadow", "plain", "pasture", "spring",
+
+					// kitchen / household
+					"stove", "cooktop", "cauldron", "hearth", "barrel", "ladle", "bowl",
+
+					// fairs & inns
+					"fair", "festival", "markets", "inn", "tavern", "pub", "bar", "tavern", "rest stop",
+
+					// language
+					"word", "speech", "accent", "saying", "proverb", "story", "legend", "riddle",
+
+					// family
+					"grandfather", "grandmother", "grandchild", "son", "daughter", "uncle", "aunt", "cousin", "brother-in-law", "father-in-law",
+
+					// fate & emotion
+					"luck", "bad luck", "fate", "humor", "spirit", "temper", "patience", "longing", "sorrow", "joy",
+
+					// travel & land
+					"road", "path", "crossroads", "border", "estate", "field", "farmland", "plowing", "sowing",
+
+					// professions
+					"guard", "gendarme", "mayor", "teacher", "priest", "schoolmaster", "monk", "abbot", "hegumen", "parish priest",
+
+					// religion
+					"church", "monastery", "hermitage", "icon", "altar", "iconostasis", "candle", "incense",
+
+					// history
+					"fortress", "court", "nobleman", "warlord", "ruler", "outlaw", "flag", "sword", "rapier",
+
+					// playful / funny
+					"whim", "jester", "mischievous", "playful", "confused", "dizzy", "crazy", "clumsy",
+					"fool", "idiot", "loony", "cheesehead", "chubby", "fluffy", "scrunched", "messy-haired", "grumbling", "chaos",
+
+					// sweets & bakery
+					"bamboo", "donut", "pancake", "donuts", "pie", "bread roll", "pretzel", "pastry", "puff pastry", "pâté",
+
+					// clothing
+					"sock", "slipper", "flip-flops", "pajamas", "robe", "underwear", "sock", "cap", "baseball cap", "small hat",
+
+					// sounds
+					"babble", "stutter", "mumbling", "grumble", "rustle", "crack", "boom", "clang", "rattle", "noise",
+
+					// personality
+					"nag", "gossip", "grumpy", "complainer", "twisted", "envy", "snobbish", "airs", "fussy", "crazy",
+
+					// birds & farm
+					"tuft", "crest", "rooster", "chick", "hen", "goose", "drake", "turkey", "pigeon", "crow",
+
+					// noises
+					"horn", "trumpet", "siren", "whistle", "drum", "pop", "bang", "zap", "thud", "crash",
+
+					// chaos words
+					"wandering", "nowhere", "upside down", "mess", "jumble", "shambles", "big mess", "confusion", "tangle", "madness",
+
+					// play
+					"play", "mischief", "trickery", "scheming", "silliness", "prank", "antic", "joke", "farce", "spice",
+
+					// random / poetic
+					"flint", "pocketknife", "ladle", "boilers", "surge", "hammock", "lantern", "flight", "echo", "reflection",
+
+					// extra everyday objects
+				"lamp", "remote", "keyboard", "mouse", "charger", "headphones", "speaker", "camera", "tripod", "microphone",
+				"wallet", "coin", "notebook", "calendar", "clock", "alarm", "keychain", "sunglasses", "helmet", "backpack",
+
+				// home & rooms
+				"kitchen", "bathroom", "bedroom", "living room", "balcony", "garage", "hallway", "stairs", "elevator", "attic",
+				"basement", "window", "curtain", "door", "handle", "lock", "carpet", "shelf", "drawer",
+
+				// nature & outdoors
+				"valley", "cliff", "cave", "trail", "summit", "waterfall", "stream", "pond", "shore", "coast",
+				"breeze", "fog", "mist", "dawn", "sunset", "twilight", "horizon", "thunder", "lightning", "hail",
+
+				// animals (common & fun)
+				"mouse", "rat", "hamster", "hedgehog", "squirrel", "deer", "moose", "boar", "camel", "donkey",
+				"parrot", "crow", "seagull", "sparrow", "peacock", "swan", "duck", "goose", "turkey", "crane",
+
+				// food & drinks
+				"soup", "sandwich", "burger", "pizza", "pasta", "steak", "sausage", "omelette", "salmon", "tuna",
+				"coffee", "espresso", "tea", "lemonade", "juice", "smoothie", "milkshake", "beer", "wine", "cocktail",
+
+				// people & roles
+				"neighbor", "stranger", "tourist", "guest", "host", "leader", "follower", "manager", "assistant", "volunteer",
+				"student", "coach", "referee", "judge", "lawyer", "detective", "journalist", "editor", "designer", "developer",
+
+				// places & buildings
+				"mall", "warehouse", "factory", "office building", "courthouse", "city hall", "embassy", "hotel", "hostel", "motel",
+				"museum", "gallery", "exhibition", "concert hall", "arena", "playground", "zoo", "aquarium", "park bench", "fountain",
+
+				// transport & travel
+				"highway", "intersection", "roundabout", "bridge", "tunnel", "parking lot", "garage", "gas station", "checkpoint", "border",
+				"suitcase", "passport", "ticket", "boarding pass", "platform", "terminal", "runway", "cockpit", "engine", "propeller",
+
+				// technology
+				"website", "app", "profile", "account", "password", "username", "notification", "message", "email", "attachment",
+				"upload", "download", "backup", "cloud", "server", "database", "algorithm", "update", "bug", "feature",
+
+				// abstract concepts
+				"choice", "decision", "mistake", "chance", "risk", "reward", "goal", "plan", "strategy", "failure",
+				"success", "pressure", "stress", "focus", "attention", "memory", "instinct", "intuition", "logic", "belief",
+
+				// emotions & states
+				"calm", "anger", "rage", "surprise", "shock", "relief", "pride", "shame", "guilt", "confidence",
+				"doubt", "trust", "suspicion", "curiosity", "boredom", "excitement", "fear", "panic", "hope", "despair",
+
+				// actions & verbs (noun-friendly)
+				"escape", "chase", "search", "discovery", "arrival", "departure", "collision", "explosion", "rescue", "capture",
+				"training", "practice", "competition", "challenge", "test", "trial", "experiment", "investigation", "mission", "quest",
+
+				// time & rhythm
+				"moment", "second", "minute", "hour", "deadline", "schedule", "routine", "break", "pause", "delay",
+				"beginning", "ending", "cycle", "phase", "turn", "round", "countdown", "timeout", "interval", "tempo",
+
+				// fun / playful
+				"banana peel", "whoopee cushion", "prank", "trick", "surprise party", "inside joke", "nickname", "meme", "gif", "sticker",
+				"high five", "facepalm", "wink", "shrug", "smirk", "giggle", "laughter", "tease", "mockery", "sarcasm",
+
+				// cinematic / adventure
+				"treasure", "map", "clue", "signal", "beacon", "hideout", "escape route", "safe house", "checkpoint", "ambush",
+				"guardian", "watchtower", "gate", "vault", "corridor", "passage", "chamber", "artifact", "relic", "legend"
+
+				];
+
+
+		const INSTRUCTIONS_RO = [
+			"Toți jucătorii mai puțin unul primesc același cuvânt.",
+			"Acesta se va preface că știe și el cuvântul.",
+			"Pe rând, fiecare spune UN CUVÂNT legat de subiect.",
+			"Nu fi prea evident – impostorul ascultă atent 👀",
+			"După 3 runde, discutați și votați cine este impostorul.",
+			"Impostorul poate vorbi, minți sau crea îndoială.",
+			"Dacă este prins, începe primul în runda următoare."
+		];
+
+		const INSTRUCTIONS_EN = [
+			"All players except one see the same word.",
+			"That player will pretend to know the word as well.",
+			"Each round, everyone says ONE word related to the topic.",
+			"Don’t be too obvious – the impostor is listening 👀",
+			"After 3 rounds, discuss and vote the impostor.",
+			"The impostor may speak, lie, or create doubt.",
+			"If discovered, the impostor starts the next game."
+		];
+
+		let LANG = "ro";
+
+		const STORAGE_CUSTOM_WORD = "impostor_customWord";
+		const STORAGE_CUSTOM_UI = "impostor_customWordUI";
+
+		let customWord = localStorage.getItem(STORAGE_CUSTOM_WORD) || "";
+		let useCustomWordUI = localStorage.getItem(STORAGE_CUSTOM_UI) === "1" || !!customWord.trim();
+
+		const UI = {
+			ro: {
+				title: "Impostor",
+				subtitle: "Un joc de deducție, suspiciune și bluff.",
+				start: "Începe jocul",
+				how: "Cum se joacă",
+				back: "Înapoi",
+				players: "Jucători",
+				setupSubtitle: "Alege numărul de jucători, citește cuvântul apoi paseaza telefonul. Unul dintre voi va fi impostor.",
+				startRound: "Începe runda",
+				player: "Jucător",
+				restart: "Înapoi",
+				nextPlayerTap: "Apasă pentru a vedea cuvântul",
+				tapPass: "Apasă aici după care dă telefonul următorului jucător",
+				doneTitle: "Gata",
+				newRound: "Rundă nouă",
+				goodLuck: "Spor la descoperit impostorul!",
+				impostor: "Impostor"
+			},
+			en: {
+				title: "Impostor",
+				subtitle: "A game of deduction, suspicion and bluff.",
+				start: "Start game",
+				how: "How to play",
+				back: "Back",
+				players: "Players",
+				setupSubtitle: "Choose the number of players, read the word then pass the phone. One of you will be the impostor.",
+				startRound: "Start round",
+				player: "Player",
+				restart: "Back",
+				nextPlayerTap: "Tap to reveal the word",
+				tapPass: "Tap here and then pass the phone to the next player",
+				doneTitle: "Done",
+				newRound: "New round",
+				goodLuck: "Good luck finding the impostor!",
+				impostor: "Impostor"
+			}
+		};
+
+		function normalizeWordInput(s) {
+			s = (s || "").trim();
+			if (!s) return "";
+			s = s.replace(/\s+/g, " ");
+			return toTitleCase(s);
+		}
+
+		function t(key) {
+			return UI[LANG][key];
+		}
+
+		const app = document.getElementById("app");
+
+		let N = 0;
+		let word = "";
+		let impostorIndex = 0;
+		let currentPlayer = 1;
+		let phase = "setup";
+
+		function randInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		let lastWord = "";
+
+		function pickWord() {
+			const list = LANG === "ro" ? WORDS_RO : WORDS_EN;
+			if (!list.length) return "";
+
+			let w = list[randInt(0, list.length - 1)];
+			if (list.length === 1) return w;
+
+			let tries = 0;
+			while (w === lastWord && tries < 20) {
+				w = list[randInt(0, list.length - 1)];
+				tries++;
+			}
+
+			lastWord = w;
+			return w;
+		}
+
+		function toTitleCase(s) {
+			s = (s || "").trim();
+			if (!s) return s;
+			if (s.includes(" ")) return s;
+			return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+		}
+
+		function startGame() {
+			N = clampPlayersValue(N || 5);
+
+			const cw = normalizeWordInput(customWord);
+			word = cw ? cw : toTitleCase(pickWord());
+
+			impostorIndex = randInt(1, N);
+			currentPlayer = 1;
+			phase = "hide";
+			render();
+		}
+
+		function updateLangButton() {
+			const img = document.getElementById("langImg");
+			if (!img) return;
+			img.src = LANG === "ro" ? "/ro.png" : "/en.png";
+			img.alt = LANG === "ro" ? "RO" : "EN";
+		}
+
+		function isMobileDevice() {
+				return matchMedia("(pointer:coarse)").matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+			}
+
+			function clampPlayersValue(n) {
+				n = Number(n || 0);
+				if (!Number.isFinite(n)) n = 5;
+				if (n < 3) n = 3;
+				if (n > 20) n = 20;
+				return n;
+			}
+
+			function renderPlayersControl() {
+				const wrap = document.getElementById("playersWrap");
+				if (!wrap) return;
+
+				const current = clampPlayersValue(N || 5);
+				N = current;
+
+				if (true) {
+					const options = Array.from({ length: 18 }, (_, i) => i + 3)
+						.map(v => `<option value="${v}" ${v === current ? "selected" : ""}>${v}</option>`)
+						.join("");
+
+					wrap.innerHTML = `<select id="playersSelect" class="playerSelect" aria-label="Players">${options}</select>`;
+
+					const sel = document.getElementById("playersSelect");
+					sel.onchange = () => { N = clampPlayersValue(sel.value); };
+				} else {
+					wrap.innerHTML = `<div id="playersNumber" class="playerValue">${current}</div>`;
+				}
+			}
+
+			function setPlayers(delta) {
+				N = clampPlayersValue((N || 5) + delta);
+
+				const sel = document.getElementById("playersSelect");
+				if (sel) sel.value = String(N);
+
+				const num = document.getElementById("playersNumber");
+				if (num) num.textContent = String(N);
+			}
+
+
+		function renderInstructions() {
+			const list = LANG === "ro" ? INSTRUCTIONS_RO : INSTRUCTIONS_EN;
+
+			app.className = "screen";
+			app.innerHTML = `
+				<div class="wrap">
+					<div class="card">
+						<div class="title">${t("how")}</div>
+
+						<ul style="text-align:left; margin-top:16px; line-height:1.6;">
+							${list.map(i => `<li>${i}</li>`).join("")}
+						</ul>
+
+						<div class="row" style="margin-top:20px">
+							<button id="back" class="btn btn2">${t("back")}</button>
+						</div>
+					</div>
+				</div>
+			`;
+
+			document.getElementById("back").onclick = () => {
+				phase = "setup";
+				render();
+			};
+		}
+
+	function renderSetup() {
+			app.className = "screen";
+			app.innerHTML = `
+					<div class="wrap">
+						<div class="card tapArea" id="tapArea">
+							<div class="brand">
+								<div class="logo"></div>
+								<div class="title">${t("title")}</div>
+							</div>
+
+							<p class="subtitle">${t("setupSubtitle")}</p>
+
+							<div class="row">
+								<div class="field">
+									<label>${t("players")}</label>
+
+									<div class="playerControl">
+										<button id="decPlayers" class="stepBtn" type="button" aria-label="Decrease players">−</button>
+										<div id="playersWrap"></div>
+										<button id="incPlayers" class="stepBtn" type="button" aria-label="Increase players">+</button>
+									</div>
+								</div>
+
+								<div style="width:100%; display:flex; justify-content:center; margin-top:10px;">
+									${useCustomWordUI
+								? `
+												<input id="customWordInput" class="wordInput" type="text" inputmode="text"
+													autocomplete="off" autocapitalize="words" spellcheck="false"
+													placeholder="${LANG === "ro" ? "Cuvânt (opțional)" : "Word (optional)"}"
+													value="${(customWord || "").replace(/"/g, "&quot;")}" />
+												`
+								: `<button id="customWordBtn" class="btn btn2">${LANG === "ro" ? "Cuvânt preferențial" : "Custom word"}</button>`
+							}
+								</div>
+
+								<button id="start" class="btn">${t("startRound")}</button>
+							</div>
+						</div>
+
+						<div class="bottomControls">
+							<div class="topRow">
+								<button id="how" class="btn btn2">${t("how")}</button>
+								<button id="lang" class="btn btn2 flagBtn" aria-label="Switch language">
+									<img id="langImg" class="flagImg" src="${LANG === "ro" ? "/ro.png" : "/en.png"}" alt="${LANG === "ro" ? "RO" : "EN"}" />
+								</button>
+							</div>
+
+							<div class="kofiWrap">
+								<a href="https://ko-fi.com/cristian_gabriel/?amount=5" target="_blank" rel="noopener noreferrer">
+									<img src="https://storage.ko-fi.com/cdn/kofi5.png" alt="Buy Me a Coffee" />
+								</a>
+							</div>
+						</div>
+					</div>
+				`;
+
+			renderPlayersControl();
+
+			document.getElementById("decPlayers").onclick = () => setPlayers(-1);
+			document.getElementById("incPlayers").onclick = () => setPlayers(1);
+
+			document.getElementById("start").onclick = () => startGame();
+			document.getElementById("how").onclick = () => { phase = "instructions"; render(); };
+
+			document.getElementById("lang").onclick = () => {
+				LANG = LANG === "ro" ? "en" : "ro";
+				renderSetup();
+			};
+
+			const customBtn = document.getElementById("customWordBtn");
+		if (customBtn) {
+			customBtn.onclick = () => {
+				useCustomWordUI = true;
+				localStorage.setItem(STORAGE_CUSTOM_UI, "1");
+				renderSetup();
+				const input = document.getElementById("customWordInput");
+				if (input) input.focus();
+			};
+		}
+
+		const input = document.getElementById("customWordInput");
+		if (input) {
+			input.oninput = () => {
+				customWord = input.value;
+				localStorage.setItem(STORAGE_CUSTOM_WORD, customWord);
+			};
+			input.onkeydown = (e) => {
+				if (e.key === "Enter") startGame();
+				if (e.key === "Escape") {
+					useCustomWordUI = false;
+					customWord = "";
+					localStorage.removeItem(STORAGE_CUSTOM_WORD);
+					localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+					renderSetup();
+				}
+			};
+		}
+
+		}
+
+		function renderTopbar() {
+			return `
+				<div class="topbar">
+					<div class="pill">${t("player")} ${currentPlayer} / ${N}</div>
+					<div style="display:flex; gap:10px; pointer-events:auto;">
+						<div class="link" id="restart">${t("restart")}</div>
+					</div>
+				</div>
+			`;
+		}
+
+		function wireTopbar() {
+			const restartEl = document.getElementById("restart");
+			if (restartEl) {
+				restartEl.onclick = (e) => {
+					e.stopPropagation();
+					phase = "setup";
+					render();
+				};
+			}
+		}
+
+		function renderHide() {
+				app.className = "screen blackout";
+				app.innerHTML = `
+					${renderTopbar()}
+					<div class="wrap tapArea" id="tapArea">
+						<div class="card">
+							<div class="big word"> </div>
+							<div class="sub">${t("nextPlayerTap")}</div>
+						</div>
+					</div>
+				`;
+				wireTopbar();
+
+				const tap = document.getElementById("tapArea");
+				if (tap) tap.onpointerup = (e) => { e.preventDefault(); e.stopPropagation(); guardedTap(); };
+			}
+
+		function renderReveal() {
+			const isImp = currentPlayer === impostorIndex;
+			const text = isImp ? t("impostor") : word;
+			const cls = "word";
+
+			app.className = "screen";
+						app.innerHTML = `
+				${renderTopbar()}
+				<div class="wrap tapArea" id="tapArea">
+					<div class="card">
+						<div class="big ${cls}">${text}</div>
+						<div class="sub">${t("tapPass")}</div>
+					</div>
+				</div>
+			`;
+			wireTopbar();
+
+			const tap = document.getElementById("tapArea");
+			if (tap) tap.onpointerup = (e) => { e.preventDefault(); e.stopPropagation(); guardedTap(); };
+
+		}
+
+		function renderDone() {
+			app.className = "screen";
+			app.innerHTML = `
+				<div class="wrap">
+					<div class="card">
+						<div class="brand">
+							<div class="logo"></div>
+							<div class="title">${t("doneTitle")}</div>
+						</div>
+						<div class="doneGrid">
+							<button id="again" class="btn">${t("newRound")}</button>
+							<button id="back" class="btn btn2">${t("back")}</button>
+						</div>
+						<div class="hint">${t("goodLuck")}</div>
+					</div>
+				</div>
+			`;
+
+			document.getElementById("again").onclick = () => {
+				useCustomWordUI = false;
+				customWord = "";
+				localStorage.removeItem(STORAGE_CUSTOM_WORD);
+				localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+				startGame();
+			};
+
+			document.getElementById("back").onclick = () => {
+				useCustomWordUI = false;
+				customWord = "";
+				localStorage.removeItem(STORAGE_CUSTOM_WORD);
+				localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+				phase = "setup";
+				render();
+			};
+
+		}
+
+		function showPassOverlayAndAdvance() {
+				const overlay = document.createElement("div");
+				overlay.className = "passOverlay";
+				overlay.textContent = "PASS";
+
+				document.body.appendChild(overlay);
+
+				setTimeout(() => {
+					overlay.remove();
+					nextPhase();
+				}, 3000);
+			}
+
+
+		function render() {
+			if (phase === "intro") return renderIntro();
+			if (phase === "instructions") return renderInstructions();
+			if (phase === "setup") return renderSetup();
+			if (phase === "hide") return renderHide();
+			if (phase === "reveal") return renderReveal();
+			if (phase === "done") return renderDone();
+		}
+
+		function nextPhase() {
+			if (phase === "hide") {
+				phase = "reveal";
+				render();
+				return;
+			}
+			if (phase === "reveal") {
+				if (currentPlayer >= N) phase = "done";
+				else { currentPlayer += 1; phase = "hide"; }
+				render();
+				return;
+			}
+		}
+
+		let lastTap = 0;
+		function guardedTap() {
+			const now = Date.now();
+			if (now - lastTap < 250) return;
+			lastTap = now;
+
+			if (phase === "reveal") {
+				showPassOverlayAndAdvance();
+				return;
+			}
+
+			nextPhase();
+		}
+
+
+		render();
+	</script>
+</body>
+
+</html>
