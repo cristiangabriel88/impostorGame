@@ -458,6 +458,70 @@
 			text-align: center;
 			appearance: textfield;
 		}
+
+		.wordInputWrap {
+			position: relative;
+			width: 240px;
+			max-width: 70vw;
+		}
+
+		.wordInput {
+			width: 100%;
+			padding-right: 44px;
+		}
+
+		.randomBtn {
+			position: absolute;
+			right: 8px;
+			top: 47%;
+			transform: translateY(-50%);
+			border: 0;
+			background: transparent;
+			font-size: 20px;
+			cursor: pointer;
+			color: rgba(255, 255, 255, .7);
+			padding: 6px;
+		}
+
+		.randomBtn:active {
+			transform: translateY(-50%) scale(0.95);
+		}
+
+		#creatorMark {
+			position: fixed;
+			bottom: env(safe-area-inset-bottom, 0px);
+			left: 50%;
+			transform: translateX(-50%);
+			font-size: 22px;
+			line-height: 1;
+			color: rgba(255, 255, 255, .55);
+			text-decoration: none;
+			z-index: 20;
+			padding: 10px;
+			animation: markPulse 4s ease-in-out infinite;
+		}
+
+
+		#creatorMark.show {
+			opacity: .6;
+			pointer-events: auto;
+		}
+
+		#creatorMark:active {
+			opacity: 1;
+		}
+
+		@keyframes markPulse {
+
+			0%,
+			100% {
+				text-shadow: 0 0 0 rgba(124, 92, 255, 0);
+			}
+
+			50% {
+				text-shadow: 0 0 12px rgba(124, 92, 255, .45);
+			}
+		}
 	</style>
 </head>
 
@@ -831,7 +895,7 @@
 				how: "How to play",
 				back: "Back",
 				players: "Players",
-				setupSubtitle: "Choose the number of players, read the word then pass the phone. One of you will be the impostor. WiLL they remain undetected?",
+				setupSubtitle: "Choose the number of players, read the word then pass the phone. One of you will be the impostor. Will they remain undetected?",
 				startRound: "Start round",
 				player: "Player",
 				restart: "Back",
@@ -1033,17 +1097,17 @@
 									</div>
 								</div>
 
-								<div style="width:100%; display:flex; justify-content:center; margin-top:10px;">
-									${useCustomWordUI
-					? `
-												<input id="customWordInput" class="wordInput" type="text" inputmode="text"
-													autocomplete="off" autocapitalize="words" spellcheck="false"
-													placeholder="${LANG === "ro" ? "Cuvânt (opțional)" : "Word (optional)"}"
-													value="${(customWord || "").replace(/"/g, "&quot;")}" />
-												`
-					: `<button id="customWordBtn" class="btn btn2">${LANG === "ro" ? "Cuvânt preferențial" : "Custom word"}</button>`
-				}
+							<div style="width:100%; display:flex; justify-content:center; margin-top:10px;">
+								<div class="wordInputWrap">
+									<input id="customWordInput" class="wordInput" type="text" inputmode="text"
+										autocomplete="off" autocapitalize="words" spellcheck="false"
+										placeholder="${LANG === "ro" ? "Cuvânt aleator" : "Random word"}"
+										value="${(customWord || "").replace(/"/g, "&quot;")}" />
+									<button id="randomWordBtn" class="randomBtn" type="button" aria-label="Random word">🎲</button>
 								</div>
+							</div>
+
+
 
 								<button id="start" class="btn">${t("startRound")}</button>
 							</div>
@@ -1093,6 +1157,19 @@
 			}
 
 			const input = document.getElementById("customWordInput");
+
+			const randBtn = document.getElementById("randomWordBtn");
+			if (randBtn && input) {
+				randBtn.onclick = () => {
+					const w = toTitleCase(pickWord());
+					input.value = w;
+					customWord = w;
+					localStorage.setItem(STORAGE_CUSTOM_WORD, customWord);
+					input.focus();
+				};
+			}
+
+
 			if (input) {
 				input.oninput = () => {
 					customWord = input.value;
@@ -1211,7 +1288,7 @@
 		}
 
 		function showPassOverlayAndAdvance() {
-			const durationSec = 4;
+			const durationSec = 3;
 
 			const overlay = document.createElement("div");
 			overlay.className = "passOverlay";
@@ -1280,9 +1357,11 @@
 			nextPhase();
 		}
 
-
 		render();
 	</script>
+
+	<a id="creatorMark" href="https://cristiangabriel.dev" target="_blank" rel="noopener noreferrer">◐</a>
+
 </body>
 
 </html>
