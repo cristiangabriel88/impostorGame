@@ -5,9 +5,9 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
 	<title>Impostor</title>
 
 	<style>
@@ -41,22 +41,26 @@
 				radial-gradient(900px 700px at 80% 20%, rgba(33, 212, 253, .18), transparent 55%),
 				radial-gradient(900px 700px at 50% 90%, rgba(255, 77, 109, .12), transparent 60%),
 				linear-gradient(180deg, var(--bg0), var(--bg1));
-			overflow: hidden;
+			overflow-x: hidden;
+			overflow-y: auto;
 			touch-action: manipulation;
 		}
 
 		.screen {
 			height: 100%;
+			min-height: 100vh;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			padding: 24px;
 			text-align: center;
 			user-select: none;
+			/* padding-bottom: 90px; */
 		}
 
 		.wrap {
 			width: min(560px, 100%);
+			margin-top: 5%;
 		}
 
 		.card {
@@ -131,6 +135,16 @@
 			flex-wrap: wrap;
 			margin-top: 10px;
 		}
+
+		.column {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+			justify-content: center;
+			margin-top: 10px;
+		}
+
 
 		.field {
 			display: flex;
@@ -491,10 +505,10 @@
 		}
 
 		#creatorMark {
-			position: fixed;
-			bottom: env(safe-area-inset-bottom, 0px);
-			left: 50%;
-			transform: translateX(-50%);
+			position: static;
+			display: block;
+			width: fit-content;
+			margin: 10px auto calc(env(safe-area-inset-bottom, 0px) + 10px);
 			font-size: 22px;
 			line-height: 1;
 			color: rgba(255, 255, 255, .55);
@@ -536,7 +550,7 @@
 			}
 		}
 
-				.finishBadge {
+		.finishBadge {
 			width: clamp(96px, 18vw, 140px);
 			height: clamp(96px, 18vw, 140px);
 			margin: 6px auto 14px;
@@ -544,20 +558,20 @@
 			display: grid;
 			place-items: center;
 			background:
-				radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.08) 32%, transparent 60%),
+				radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .55), rgba(255, 255, 255, .08) 32%, transparent 60%),
 				linear-gradient(135deg, #39ff88, #18c46c);
 			box-shadow:
-				0 0 0 10px rgba(57,255,136,.12),
-				0 0 0 1px rgba(255,255,255,.18) inset,
-				0 20px 70px rgba(0,0,0,.55),
-				0 18px 60px rgba(57,255,136,.22);
+				0 0 0 10px rgba(57, 255, 136, .12),
+				0 0 0 1px rgba(255, 255, 255, .18) inset,
+				0 20px 70px rgba(0, 0, 0, .55),
+				0 18px 60px rgba(57, 255, 136, .22);
 			animation: finishPulse 2.8s ease-in-out infinite;
 		}
 
 		.finishBadge svg {
 			width: 62%;
 			height: 62%;
-			filter: drop-shadow(0 10px 22px rgba(0,0,0,.45));
+			filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .45));
 		}
 
 		.finishBadge path {
@@ -568,255 +582,271 @@
 			fill: none;
 		}
 
-@keyframes finishPulse {
-	0% {
-		transform: scale(1);
-		box-shadow:
-			0 0 0 10px rgba(57,255,136,.10),
-			0 0 0 1px rgba(255,255,255,.18) inset,
-			0 14px 34px rgba(57,255,136,.16);
-	}
-	50% {
-		transform: scale(1.055);
-		box-shadow:
-			0 0 0 16px rgba(57,255,136,.18),
-			0 0 0 1px rgba(255,255,255,.22) inset,
-			0 18px 44px rgba(57,255,136,.22);
-	}
-	100% {
-		transform: scale(1);
-		box-shadow:
-			0 0 0 10px rgba(57,255,136,.10),
-			0 0 0 1px rgba(255,255,255,.18) inset,
-			0 14px 34px rgba(57,255,136,.16);
-	}
-}
+		@keyframes finishPulse {
+			0% {
+				transform: scale(1);
+				box-shadow:
+					0 0 0 10px rgba(57, 255, 136, .10),
+					0 0 0 1px rgba(255, 255, 255, .18) inset,
+					0 14px 34px rgba(57, 255, 136, .16);
+			}
 
-.finishCard {
-	padding-top: 22px;
-}
+			50% {
+				transform: scale(1.055);
+				box-shadow:
+					0 0 0 16px rgba(57, 255, 136, .18),
+					0 0 0 1px rgba(255, 255, 255, .22) inset,
+					0 18px 44px rgba(57, 255, 136, .22);
+			}
 
-.finishKicker {
-	font-size: 13px;
-	letter-spacing: .18em;
-	text-transform: uppercase;
-	color: rgba(255,255,255,.70);
-	margin-top: 6px;
-}
+			100% {
+				transform: scale(1);
+				box-shadow:
+					0 0 0 10px rgba(57, 255, 136, .10),
+					0 0 0 1px rgba(255, 255, 255, .18) inset,
+					0 14px 34px rgba(57, 255, 136, .16);
+			}
+		}
 
-.finishTitle {
-	font-size: 3rem;
-	font-weight: 300;
- 	font-family: "Titan One", sans-serif;
-	font-weight: 200;
-	font-style: normal;
-	letter-spacing: 2px;
-	margin-top: 2rem;
-	margin-left: 10px;
-	background: linear-gradient(135deg, rgba(255,255,255,.92), rgba(255,255,255,.65));
-	-webkit-background-clip: text;
-	background-clip: text;
-	color: transparent;
-	text-shadow: 0 18px 60px rgba(0,0,0,.28);
-}
+		.finishCard {
+			padding-top: 22px;
+		}
 
-.finishMeta {
-	margin-top: 12px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-	flex-wrap: wrap;
-}
+		.finishKicker {
+			font-size: 13px;
+			letter-spacing: .18em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, .70);
+			margin-top: 6px;
+		}
 
-.finishPill {
-	padding: 8px 12px;
-	border-radius: 999px;
-	border: 1px solid rgba(255,255,255,.12);
-	background: rgba(0,0,0,.18);
-	backdrop-filter: blur(8px);
-	color: rgba(255,255,255,.78);
-	font-size: 13px;
-}
+		.finishTitle {
+			font-size: 3rem;
+			font-weight: 300;
+			font-family: "Titan One", sans-serif;
+			font-weight: 200;
+			font-style: normal;
+			letter-spacing: 2px;
+			margin-top: 2rem;
+			margin-left: 10px;
+			background: linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .65));
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			text-shadow: 0 18px 60px rgba(0, 0, 0, .28);
+		}
 
-.finishDot {
-	opacity: .45;
-}
+		.finishMeta {
+			margin-top: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
 
-.voteCard {
-	padding-top: 22px;
-}
+		.finishPill {
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: rgba(0, 0, 0, .18);
+			backdrop-filter: blur(8px);
+			color: rgba(255, 255, 255, .78);
+			font-size: 13px;
+		}
 
-.voteTitle {
-	font-size: 30px;
-	font-weight: 950;
-	letter-spacing: .3px;
-	margin-top: 10px;
-}
+		.finishDot {
+			opacity: .45;
+		}
 
-.voteSub {
-	margin-top: 10px;
-	color: rgba(255,255,255,.72);
-	font-size: 14px;
-	line-height: 1.35;
-}
+		.voteCard {
+			padding-top: 22px;
+		}
 
-.voteForm{
-  margin-top:30px;
-  margin-bottom: 30px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  justify-content:center;
-  align-items:center;
-}
+		.voteTitle {
+			font-size: 30px;
+			font-weight: 950;
+			letter-spacing: .3px;
+			margin-top: 10px;
+		}
 
-.voteInput {
-	width: min(320px, 86vw);
-	border: 1px solid rgba(255,255,255,.14);
-	border-radius: 18px;
-	background: rgba(255,255,255,.06);
-	color: rgba(255,255,255,.92);
-	padding: 14px 16px;
-	font-size: 16px;
-	font-weight: 900;
-	letter-spacing: .08em;
-	text-transform: uppercase;
-	outline: none;
-}
+		.voteSub {
+			margin-top: 10px;
+			color: rgba(255, 255, 255, .72);
+			font-size: 14px;
+			line-height: 1.35;
+		}
 
-.voteInput::placeholder {
-	color: rgba(255,255,255,.45);
-	text-transform: none;
-	letter-spacing: 0;
-	font-weight: 750;
-}
+		.voteForm {
+			margin-top: 30px;
+			margin-bottom: 30px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			justify-content: center;
+			align-items: center;
+		}
 
-.voteProgress {
-	margin-top: 14px;
-	display: flex;
-	justify-content: center;
-	gap: 10px;
-	flex-wrap: wrap;
-}
+		.voteInput {
+			width: min(320px, 86vw);
+			border: 1px solid rgba(255, 255, 255, .14);
+			border-radius: 18px;
+			background: rgba(255, 255, 255, .06);
+			color: rgba(255, 255, 255, .92);
+			padding: 14px 16px;
+			font-size: 16px;
+			font-weight: 900;
+			letter-spacing: .08em;
+			text-transform: uppercase;
+			outline: none;
+		}
 
-.voteChip {
-	padding: 8px 12px;
-	border-radius: 999px;
-	border: 1px solid rgba(255,255,255,.12);
-	background: rgba(0,0,0,.18);
-	backdrop-filter: blur(8px);
-	color: rgba(255,255,255,.78);
-	font-size: 13px;
-}
+		.voteInput::placeholder {
+			color: rgba(255, 255, 255, .45);
+			text-transform: none;
+			letter-spacing: 0;
+			font-weight: 750;
+		}
 
-.resultsList {
-	margin-top: 18px;
-	display: grid;
-	gap: 10px;
-	text-align: left;
-}
+		.voteProgress {
+			margin-top: 14px;
+			display: flex;
+			justify-content: center;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
 
-.resultRow {
-	display: grid;
-	grid-template-columns: 28px 1fr auto;
-	gap: 20px;
-	align-items: center;
-	padding: 20px 14px;
-	border-radius: 18px;
-	border: 1px solid rgba(255,255,255,.12);
-	background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.03));
-}
+		.voteChip {
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: rgba(0, 0, 0, .18);
+			backdrop-filter: blur(8px);
+			color: rgba(255, 255, 255, .78);
+			font-size: 13px;
+		}
 
-.rankBadge {
-	width: 35px;
-	height: 35px;
-	border-radius: 12px;
-	display: grid;
-	place-items: center;
-	font-weight: 950;
-	color: rgba(255,255,255,.92);
-	border: 1px solid rgba(255,255,255,.14);
-	background: rgba(0,0,0,.18);
-}
+		.resultsList {
+			margin-top: 18px;
+			display: grid;
+			gap: 10px;
+			text-align: left;
+		}
 
-.resultMain {
-	display: grid;
-	margin-left: 10px;
-	gap: 6px;
-}
+		.resultRow {
+			display: grid;
+			grid-template-columns: 28px 1fr auto;
+			gap: 20px;
+			align-items: center;
+			padding: 20px 14px;
+			border-radius: 18px;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: linear-gradient(180deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .03));
+		}
 
-.resultName {
-	font-weight: 950;
-	letter-spacing: .06em;
-	color: rgba(255,255,255,.92);
-	text-transform: uppercase;
-}
+		.rankBadge {
+			width: 35px;
+			height: 35px;
+			border-radius: 12px;
+			display: grid;
+			place-items: center;
+			font-weight: 950;
+			color: rgba(255, 255, 255, .92);
+			border: 1px solid rgba(255, 255, 255, .14);
+			background: rgba(0, 0, 0, .18);
+		}
 
-.resultBar {
-	height: 10px;
-	border-radius: 999px;
-	background: rgba(255,255,255,.08);
-	border: 1px solid rgba(255,255,255,.10);
-	overflow: hidden;
-}
+		.resultMain {
+			display: grid;
+			margin-left: 10px;
+			gap: 6px;
+		}
 
-.resultBarFill {
-	height: 100%;
-	border-radius: 999px;
-	background: linear-gradient(135deg, var(--accent), var(--accent2));
-	width: 0%;
-}
+		.resultName {
+			font-weight: 950;
+			letter-spacing: .06em;
+			color: rgba(255, 255, 255, .92);
+			text-transform: uppercase;
+		}
 
-.resultVotes {
-	font-weight: 950;
-	color: rgba(255,255,255,.86);
-	min-width: 56px;
-	text-align: right;
-}
+		.resultBar {
+			height: 10px;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, .08);
+			border: 1px solid rgba(255, 255, 255, .10);
+			overflow: hidden;
+		}
 
-.resultRow.winner {
-	border-color: rgba(57,255,136,.28);
-	background: linear-gradient(180deg, rgba(57,255,136,.14), rgba(255,255,255,.03));
-	box-shadow: 0 18px 60px rgba(57,255,136,.12);
-	animation: winnerPulse 2.6s ease-in-out infinite;
-}
+		.resultBarFill {
+			height: 100%;
+			border-radius: 999px;
+			background: linear-gradient(135deg, var(--accent), var(--accent2));
+			width: 0%;
+		}
 
-.rankBadge.winner {
-	background: linear-gradient(135deg, #39ff88, #18c46c);
-	border-color: rgba(255,255,255,.22);
-	color: rgba(10, 14, 20, .95);
-	box-shadow:
-		0 0 0 8px rgba(57,255,136,.14),
-		0 14px 40px rgba(57,255,136,.18);
-	animation: winnerBadgePulse 2.2s ease-in-out infinite;
-}
+		.resultVotes {
+			font-weight: 950;
+			color: rgba(255, 255, 255, .86);
+			min-width: 56px;
+			text-align: right;
+		}
 
-@keyframes winnerPulse {
-	0% { transform: translateY(0); }
-	50% { transform: translateY(-1px); }
-	100% { transform: translateY(0); }
-}
+		.resultRow.winner {
+			border-color: rgba(57, 255, 136, .28);
+			background: linear-gradient(180deg, rgba(57, 255, 136, .14), rgba(255, 255, 255, .03));
+			box-shadow: 0 18px 60px rgba(57, 255, 136, .12);
+			animation: winnerPulse 2.6s ease-in-out infinite;
+		}
 
-@keyframes winnerBadgePulse {
-	0% {
-		transform: scale(1);
-		filter: brightness(1);
-	}
-	50% {
-		transform: scale(1.08);
-		filter: brightness(1.08);
-	}
-	100% {
-		transform: scale(1);
-		filter: brightness(1);
-	}
-}
+		.rankBadge.winner {
+			background: linear-gradient(135deg, #39ff88, #18c46c);
+			border-color: rgba(255, 255, 255, .22);
+			color: rgba(10, 14, 20, .95);
+			box-shadow:
+				0 0 0 8px rgba(57, 255, 136, .14),
+				0 14px 40px rgba(57, 255, 136, .18);
+			animation: winnerBadgePulse 2.2s ease-in-out infinite;
+		}
 
+		@keyframes winnerPulse {
+			0% {
+				transform: translateY(0);
+			}
 
+			50% {
+				transform: translateY(-1px);
+			}
 
+			100% {
+				transform: translateY(0);
+			}
+		}
 
+		@keyframes winnerBadgePulse {
+			0% {
+				transform: scale(1);
+				filter: brightness(1);
+			}
 
+			50% {
+				transform: scale(1.08);
+				filter: brightness(1.08);
+			}
+
+			100% {
+				transform: scale(1);
+				filter: brightness(1);
+			}
+		}
+
+		.column>.field {
+			width: 20rem;
+			justify-content: space-between;
+		}
+
+		.column>.field .playerControl {
+			margin-left: auto;
+		}
 	</style>
 </head>
 
@@ -1006,7 +1036,7 @@
 			"sheepfold", "shepherd", "herd", "transhumance", "flute", "stick",
 
 			// village structures
-			"porch", "house", "barn", "hayloft", "well", "gate", "fence", "lane", "porch",
+			"porch", "house", "barn", "hayloft", "well", "gate", "fence", "lane",
 
 			// landscapes
 			"hill", "clearing", "grove", "meadow", "plain", "pasture", "spring",
@@ -1160,6 +1190,20 @@
 		let customWord = localStorage.getItem(STORAGE_CUSTOM_WORD) || "";
 		let useCustomWordUI = localStorage.getItem(STORAGE_CUSTOM_UI) === "1" || !!customWord.trim();
 
+		const STORAGE_IMPOSTORS = "impostor_impostorCount";
+
+		let impostorCount = Number(localStorage.getItem(STORAGE_IMPOSTORS) || 1);
+		let impostorsTouched = localStorage.getItem(STORAGE_IMPOSTORS) != null;
+
+		impostorCount = Number.isFinite(impostorCount) && impostorCount >= 1 ? impostorCount : 1;
+
+		let impostorSet = new Set();
+
+		const STORAGE_PLAYERS = "impostor_playerCount";
+
+		let N = Number(localStorage.getItem(STORAGE_PLAYERS) || 5);
+		N = clampPlayersValue(N);
+
 		const UI = {
 			ro: {
 				title: "Impostor",
@@ -1192,7 +1236,9 @@
 				resultsTitle: "Rezultat",
 				resultsSubtitle: "Top voturi (mai multe voturi = mai suspect).",
 				playAgain: "Rundă nouă",
-				backSetup: "Meniu"
+				backSetup: "Meniu",
+				impostors: "Impostori"
+
 			},
 			en: {
 				title: "Impostor",
@@ -1225,7 +1271,9 @@
 				resultsTitle: "Results",
 				resultsSubtitle: "Top votes (more votes = more suspicious).",
 				playAgain: "New round",
-				backSetup: "Menu"
+				backSetup: "Menu",
+				impostors: "Impostors"
+
 			}
 		};
 
@@ -1250,7 +1298,6 @@
 
 		const app = document.getElementById("app");
 
-		let N = 0;
 		let word = "";
 		let impostorIndex = 0;
 		let currentPlayer = 1;
@@ -1260,35 +1307,35 @@
 		let votes = [];
 
 		function normalizeVoteName(s) {
-				s = (s || "").trim();
-				s = s.replace(/\s+/g, " ");
-				s = s.toUpperCase();
-				return s;
+			s = (s || "").trim();
+			s = s.replace(/\s+/g, " ");
+			s = s.toUpperCase();
+			return s;
+		}
+
+		function startVoting() {
+			voteIndex = 1;
+			votes = [];
+			phase = "vote";
+			render();
+		}
+
+		function tallyVotes(list) {
+			const map = new Map();
+			for (const raw of list) {
+				const name = normalizeVoteName(raw);
+				if (!name) continue;
+				map.set(name, (map.get(name) || 0) + 1);
 			}
-
-			function startVoting() {
-				voteIndex = 1;
-				votes = [];
-				phase = "vote";
-				render();
-			}
-
-			function tallyVotes(list) {
-				const map = new Map();
-				for (const raw of list) {
-					const name = normalizeVoteName(raw);
-					if (!name) continue;
-					map.set(name, (map.get(name) || 0) + 1);
-				}
-				const arr = Array.from(map.entries()).map(([name, count]) => ({ name, count }));
-				arr.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-				return arr;
-			}
+			const arr = Array.from(map.entries()).map(([name, count]) => ({ name, count }));
+			arr.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+			return arr;
+		}
 
 
-			function renderVote() {
-					app.className = "screen";
-					app.innerHTML = `
+		function renderVote() {
+			app.className = "screen";
+			app.innerHTML = `
 					${renderTopbar()}
 					<div class="wrap">
 						<div class="card voteCard">
@@ -1307,82 +1354,82 @@
 					</div>
 				`;
 
-					wireTopbar();
+			wireTopbar();
 
-					const input = document.getElementById("voteInput");
-					const submit = document.getElementById("voteSubmit");
+			const input = document.getElementById("voteInput");
+			const submit = document.getElementById("voteSubmit");
 
-					const submitVote = () => {
-						const name = normalizeVoteName(input.value);
-						if (!name) {
-							input.focus();
-							return;
-						}
-
-						votes.push(name);
-
-						if (voteIndex >= N) {
-							phase = "results";
-							render();
-							return;
-						}
-
-						voteIndex += 1;
-						showPassOverlayAndAdvanceVote();
-					};
-
-					input.addEventListener("input", () => {
-						input.value = normalizeVoteName(input.value);
-					});
-
-					input.addEventListener("keydown", (e) => {
-						if (e.key === "Enter") submitVote();
-					});
-
-					submit.onclick = submitVote;
-
-					setTimeout(() => input.focus(), 0);
+			const submitVote = () => {
+				const name = normalizeVoteName(input.value);
+				if (!name) {
+					input.focus();
+					return;
 				}
 
-				function showPassOverlayAndAdvanceVote() {
-					const durationSec = 3;
+				votes.push(name);
 
-					const overlay = document.createElement("div");
-					overlay.className = "passOverlay";
-
-					const title = document.createElement("div");
-					title.className = "passOverlayTitle";
-					title.textContent = t("passOverlayTitle");
-
-					const countdown = document.createElement("div");
-					countdown.className = "passOverlayCountdown";
-
-					overlay.appendChild(title);
-					overlay.appendChild(countdown);
-					document.body.appendChild(overlay);
-
-					let remaining = durationSec;
-					countdown.textContent = `${remaining} ${t("passOverlaySeconds")}`;
-
-					const interval = setInterval(() => {
-						remaining -= 1;
-						if (remaining <= 0) {
-							clearInterval(interval);
-							overlay.remove();
-							render();
-							return;
-						}
-						countdown.textContent = `${remaining} ${t("passOverlaySeconds")}`;
-					}, 1000);
+				if (voteIndex >= N) {
+					phase = "results";
+					render();
+					return;
 				}
 
-				function renderResults() {
-					const rows = tallyVotes(votes);
-					const top = rows.slice(0, 6);
-					const max = top.length ? top[0].count : 1;
+				voteIndex += 1;
+				showPassOverlayAndAdvanceVote();
+			};
 
-					app.className = "screen";
-					app.innerHTML = `
+			input.addEventListener("input", () => {
+				input.value = normalizeVoteName(input.value);
+			});
+
+			input.addEventListener("keydown", (e) => {
+				if (e.key === "Enter") submitVote();
+			});
+
+			submit.onclick = submitVote;
+
+			setTimeout(() => input.focus(), 0);
+		}
+
+		function showPassOverlayAndAdvanceVote() {
+			const durationSec = 3;
+
+			const overlay = document.createElement("div");
+			overlay.className = "passOverlay";
+
+			const title = document.createElement("div");
+			title.className = "passOverlayTitle";
+			title.textContent = t("passOverlayTitle");
+
+			const countdown = document.createElement("div");
+			countdown.className = "passOverlayCountdown";
+
+			overlay.appendChild(title);
+			overlay.appendChild(countdown);
+			document.body.appendChild(overlay);
+
+			let remaining = durationSec;
+			countdown.textContent = `${remaining} ${t("passOverlaySeconds")}`;
+
+			const interval = setInterval(() => {
+				remaining -= 1;
+				if (remaining <= 0) {
+					clearInterval(interval);
+					overlay.remove();
+					render();
+					return;
+				}
+				countdown.textContent = `${remaining} ${t("passOverlaySeconds")}`;
+			}, 1000);
+		}
+
+		function renderResults() {
+			const rows = tallyVotes(votes);
+			const top = rows.slice(0, 6);
+			const max = top.length ? top[0].count : 1;
+
+			app.className = "screen";
+			app.innerHTML = `
 					<div class="wrap">
 						<div class="card">
 							<div class="brand">
@@ -1392,10 +1439,10 @@
 
 							<div class="resultsList">
 								${top.map((r, idx) => {
-									const pct = Math.round((r.count / max) * 100);
-									const isWinner = idx === 0;
+				const pct = Math.round((r.count / max) * 100);
+				const isWinner = idx === 0;
 
-								return `
+				return `
 										<div class="resultRow ${isWinner ? "winner" : ""}">
 											<div class="rankBadge ${isWinner ? "winner" : ""}">${idx + 1}</div>
 											<div class="resultMain">
@@ -1407,7 +1454,7 @@
 											<div class="resultVotes">${r.count}</div>
 										</div>
 									`;
-								}).join("")}
+			}).join("")}
 							</div>
 
 							<div class="doneGrid" style="margin-top:18px;">
@@ -1417,11 +1464,11 @@
 					</div>
 					`;
 
-					document.getElementById("back").onclick = () => {
-						phase = "setup";
-						render();
-					};
-				}
+			document.getElementById("back").onclick = () => {
+				phase = "setup";
+				render();
+			};
+		}
 
 		function randInt(min, max) {
 			return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1459,11 +1506,18 @@
 			const cw = normalizeWordInput(customWord);
 			word = cw ? cw : toTitleCase(pickWord());
 
-			impostorIndex = randInt(1, N);
+			impostorSet = new Set();
+			impostorCount = clampImpostorsValue(impostorCount);
+
+			while (impostorSet.size < impostorCount) {
+				impostorSet.add(randInt(1, N));
+			}
+
 			currentPlayer = 1;
 			phase = "hide";
 			render();
 		}
+
 
 		function updateLangButton() {
 			const img = document.getElementById("langImg");
@@ -1487,6 +1541,8 @@
 		function renderPlayersControl() {
 			const wrap = document.getElementById("playersWrap");
 			if (!wrap) return;
+
+			localStorage.setItem(STORAGE_PLAYERS, String(N));
 
 			const current = clampPlayersValue(N || 5);
 			N = current;
@@ -1512,6 +1568,7 @@
 				if (v && Number(v) > 99) v = "99";
 				input.value = v;
 				N = clampPlayersValue(v);
+				localStorage.setItem(STORAGE_PLAYERS, String(N));
 			};
 
 			input.onblur = () => {
@@ -1532,11 +1589,81 @@
 		function setPlayers(delta) {
 			N = clampPlayersValue((N || 5) + delta);
 
+			localStorage.setItem(STORAGE_PLAYERS, String(N));
+
 			const input = document.getElementById("playersInput");
 			if (input) input.value = String(N);
 
 			const num = document.getElementById("playersNumber");
 			if (num) num.textContent = String(N);
+		}
+
+		function clampImpostorsValue(k) {
+			k = Number(k || 0);
+			if (!Number.isFinite(k)) k = 1;
+			if (k < 1) k = 1;
+
+			const players = clampPlayersValue(N || 5);
+			const max = Math.max(1, players - 1);
+			if (k > max) k = max;
+
+			return k;
+		}
+
+		function renderImpostorsControl() {
+			const wrap = document.getElementById("impostorsWrap");
+			if (!wrap) return;
+
+			impostorCount = clampImpostorsValue(impostorCount);
+
+			wrap.innerHTML = `
+		<input
+			id="impostorsInput"
+			type="number"
+			inputmode="numeric"
+			min="1"
+			max="${Math.max(1, (N || 5) - 1)}"
+			step="1"
+			value="${impostorCount}"
+			aria-label="Impostors"
+		/>
+	`;
+
+			const input = document.getElementById("impostorsInput");
+
+			input.oninput = () => {
+				impostorsTouched = true;
+				let v = (input.value || "").replace(/[^\d]/g, "");
+				input.value = v;
+				impostorCount = clampImpostorsValue(v);
+				localStorage.setItem(STORAGE_IMPOSTORS, String(impostorCount));
+			};
+
+
+			input.onblur = () => {
+				impostorCount = clampImpostorsValue(input.value);
+				input.value = String(impostorCount);
+				localStorage.setItem(STORAGE_IMPOSTORS, String(impostorCount));
+			};
+
+			input.onkeydown = (e) => {
+				if (e.key === "Enter") {
+					impostorCount = clampImpostorsValue(input.value);
+					input.value = String(impostorCount);
+					localStorage.setItem(STORAGE_IMPOSTORS, String(impostorCount));
+					input.blur();
+				}
+			};
+		}
+
+		function setImpostors(delta) {
+			impostorsTouched = true;
+			impostorCount = clampImpostorsValue((impostorCount || 1) + delta);
+
+			const input = document.getElementById("impostorsInput");
+			if (input) input.value = String(impostorCount);
+
+			localStorage.setItem(STORAGE_IMPOSTORS, String(impostorCount));
 		}
 
 
@@ -1570,6 +1697,11 @@
 			customWord = "";
 			localStorage.removeItem(STORAGE_CUSTOM_WORD);
 
+			if (!impostorsTouched) {
+				impostorCount = 1;
+				localStorage.removeItem(STORAGE_IMPOSTORS);
+			}
+
 			useCustomWordUI = false;
 			localStorage.setItem(STORAGE_CUSTOM_UI, "0");
 
@@ -1584,7 +1716,7 @@
 
 							<p class="subtitle">${t("setupSubtitle")}</p>
 
-							<div class="row">
+							<div class="column">
 								<div class="field">
 									<label>${t("players")}</label>
 
@@ -1595,17 +1727,26 @@
 									</div>
 								</div>
 
-							<div style="width:100%; display:flex; justify-content:center; margin-top:10px;">
-								<div class="wordInputWrap">
-									<input id="customWordInput" class="wordInput" type="text" inputmode="text"
-										autocomplete="off" autocapitalize="words" spellcheck="false"
-										placeholder="${LANG === "ro" ? "Cuvânt aleator" : "Random word"}"
-										value="${(customWord || "").replace(/"/g, "&quot;")}" />
-									<button id="randomWordBtn" class="randomBtn" type="button" aria-label="Random word">🎲</button>
+								<div class="field">
+									<label>${t("impostors")}</label>
+
+									<div class="playerControl">
+										<button id="decImpostors" class="stepBtn" type="button" aria-label="Decrease impostors">−</button>
+										<div id="impostorsWrap"></div>
+										<button id="incImpostors" class="stepBtn" type="button" aria-label="Increase impostors">+</button>
+									</div>
 								</div>
-							</div>
 
-
+								<div style="width:100%; display:flex; justify-content:center; margin-top:10px;">
+									<div class="wordInputWrap">
+										<input id="customWordInput" class="wordInput" type="text" inputmode="text"
+											autocomplete="off" autocapitalize="words" spellcheck="false"
+											placeholder="${LANG === "ro" ? "Cuvânt aleator" : "Random word"}"
+											value="${(customWord || "").replace(/"/g, "&quot;")}" />
+										<button id="randomWordBtn" class="randomBtn" type="button" aria-label="Random word">🎲</button>
+									</div>
+								</div>
+								
 
 								<button id="start" class="btn">${t("startRound")}</button>
 							</div>
@@ -1627,13 +1768,21 @@
 							</div>
 
 						</div>
+
+						<a id="creatorMark" href="https://cristiangabriel.dev" target="_blank" rel="noopener noreferrer">∘⊙∘</a>
 					</div>
 				`;
 
 			renderPlayersControl();
 
-			document.getElementById("decPlayers").onclick = () => setPlayers(-1);
-			document.getElementById("incPlayers").onclick = () => setPlayers(1);
+			renderImpostorsControl();
+
+			document.getElementById("decImpostors").onclick = () => setImpostors(-1);
+			document.getElementById("incImpostors").onclick = () => setImpostors(1);
+
+
+			document.getElementById("decPlayers").onclick = () => { setPlayers(-1); renderImpostorsControl(); };
+			document.getElementById("incPlayers").onclick = () => { setPlayers(1); renderImpostorsControl(); };
 
 			document.getElementById("start").onclick = () => startGame();
 			document.getElementById("how").onclick = () => { phase = "instructions"; render(); };
@@ -1742,7 +1891,7 @@
 		}
 
 		function renderReveal() {
-			const isImp = currentPlayer === impostorIndex;
+			const isImp = impostorSet.has(currentPlayer);
 			const text = isImp ? t("impostor") : word;
 			const cls = "word";
 
@@ -1764,8 +1913,8 @@
 		}
 
 		function renderDone() {
-				app.className = "screen";
-				app.innerHTML = `
+			app.className = "screen";
+			app.innerHTML = `
 					<div class="wrap">
 						<div class="card finishCard">
 							<div class="finishBadge" aria-hidden="true">
@@ -1794,28 +1943,28 @@
 					</div>
 				`;
 
-				const newRoundBtn = document.getElementById("newRound");
-				if (newRoundBtn) newRoundBtn.onclick = () => {
-					useCustomWordUI = false;
-					customWord = "";
-					localStorage.removeItem(STORAGE_CUSTOM_WORD);
-					localStorage.setItem(STORAGE_CUSTOM_UI, "0");
-					startGame();
-				};
+			const newRoundBtn = document.getElementById("newRound");
+			if (newRoundBtn) newRoundBtn.onclick = () => {
+				useCustomWordUI = false;
+				customWord = "";
+				localStorage.removeItem(STORAGE_CUSTOM_WORD);
+				localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+				startGame();
+			};
 
-				const backSetupBtn = document.getElementById("backSetup");
-				if (backSetupBtn) backSetupBtn.onclick = () => {
-					useCustomWordUI = false;
-					customWord = "";
-					localStorage.removeItem(STORAGE_CUSTOM_WORD);
-					localStorage.setItem(STORAGE_CUSTOM_UI, "0");
-					phase = "setup";
-					render();
-				};
+			const backSetupBtn = document.getElementById("backSetup");
+			if (backSetupBtn) backSetupBtn.onclick = () => {
+				useCustomWordUI = false;
+				customWord = "";
+				localStorage.removeItem(STORAGE_CUSTOM_WORD);
+				localStorage.setItem(STORAGE_CUSTOM_UI, "0");
+				phase = "setup";
+				render();
+			};
 
-				const voteBtn = document.getElementById("vote");
-				if (voteBtn) voteBtn.onclick = () => startVoting();
-			}
+			const voteBtn = document.getElementById("vote");
+			if (voteBtn) voteBtn.onclick = () => startVoting();
+		}
 
 
 		function showPassOverlayAndAdvance() {
@@ -1851,18 +2000,18 @@
 		}
 
 
-	function render() {
-		if (phase === "intro") renderIntro();
-		else if (phase === "instructions") renderInstructions();
-		else if (phase === "setup") renderSetup();
-		else if (phase === "hide") renderHide();
-		else if (phase === "reveal") renderReveal();
-		else if (phase === "done") renderDone();
-		else if (phase === "vote") renderVote();
-		else if (phase === "results") renderResults();
+		function render() {
+			if (phase === "intro") renderIntro();
+			else if (phase === "instructions") renderInstructions();
+			else if (phase === "setup") renderSetup();
+			else if (phase === "hide") renderHide();
+			else if (phase === "reveal") renderReveal();
+			else if (phase === "done") renderDone();
+			else if (phase === "vote") renderVote();
+			else if (phase === "results") renderResults();
 
-		updateCreatorMark();
-	}
+			updateCreatorMark();
+		}
 
 
 		function nextPhase() {
@@ -1898,7 +2047,7 @@
 		});
 	</script>
 
-	<a id="creatorMark" href="https://cristiangabriel.dev" target="_blank" rel="noopener noreferrer">∘⊙∘</a>
+
 
 </body>
 
