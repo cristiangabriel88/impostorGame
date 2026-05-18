@@ -18,7 +18,7 @@ const INSTRUCTIONS_EN = [
 	"If discovered, the impostor starts the next game."
 ];
 
-let LANG = "ro";
+let LANG = "en";
 
 const STORAGE_CUSTOM_WORD = "impostor_customWord";
 const STORAGE_CUSTOM_UI = "impostor_customWordUI";
